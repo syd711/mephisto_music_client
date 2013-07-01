@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/mephisto.iml" filepath="$PROJECT_DIR$/mephisto.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mephisto_music_client.iml" filepath="$PROJECT_DIR$/mephisto_music_client.iml" />
     </modules>
   </component>
 </project>
