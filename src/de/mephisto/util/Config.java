@@ -13,11 +13,16 @@ public class Config {
 	private final static Logger LOG = LoggerFactory.getLogger(Config.class);
 	
 	private final static String HTTP_CONFIG = "http.properties";
-	private final static String CONFIG_FOLDER = "conf/";
-	
+	public final static String CONFIG_FOLDER = "conf/";
+	public final static String PROVIDER_CONFIG_FOLDER = "providers/";
+
 	public static Configuration getHttpConfiguration() {
 		return getConfiguration(HTTP_CONFIG);
 	}
+
+    public static Configuration getProviderConfiguration(String name) {
+        return getConfiguration(PROVIDER_CONFIG_FOLDER + name);
+    }
 
 	public static Configuration getConfiguration(String name) {
 		try {
