@@ -5,7 +5,7 @@ package de.mephisto.model;
  */
 public class Genre extends SongCollection {
 
-    public Genre(String name) {
-        super(name);
-    }
+  public Genre(String name) {
+    super(name);
+  }
 }

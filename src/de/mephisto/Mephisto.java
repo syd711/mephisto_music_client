@@ -1,63 +1,68 @@
 package de.mephisto;
 
+import de.mephisto.http.Server;
 import de.mephisto.player.IMusicPlayer;
 import de.mephisto.player.PlayerFactory;
 import de.mephisto.service.MusicProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.mephisto.http.Server;
-
 import java.io.IOException;
 
 /**
  * Main class of the Mephisto Music Web Client.
- *
  */
 public class Mephisto {
-	final static Logger LOG = LoggerFactory.getLogger(Mephisto.class);
+  final static Logger LOG = LoggerFactory.getLogger(Mephisto.class);
 
-    private static Mephisto instance;
+  private static Mephisto instance;
 
-    private IMusicPlayer player;
+  private IMusicPlayer player;
 
-    public static Mephisto getInstance() {
-        return instance;
-    }
+  public static Mephisto getInstance() {
+    return instance;
+  }
 
-    public IMusicPlayer getPlayer() {
-        return player;
-    }
+  public IMusicPlayer getPlayer() {
+    return player;
+  }
 
+  private Mephisto() {
     //force private singleton
-	private Mephisto() throws Exception {
+  }
 
-	}
+  /**
+   * Initializes providers and creates the music dictionary.
+   *
+   * @throws IOException
+   */
+  private void initServices() {
+    try {
+      LOG.info("Mephisto is starting");
+      LOG.info("Starting http server on: " + Server.resolveHttpUrl());
+      Server.start();
 
-    /**
-     * Initializes providers and creates the music dictionary.
-     * @throws IOException
-     */
-    private void initServices() throws IOException {
-        LOG.info("Mephisto is starting");
-        LOG.info("Starting http server on: " + Server.resolveHttpUrl());
-        Server.start();
+      LOG.info("Loading Player");
+      player = PlayerFactory.createPlayer();
 
-        LOG.info("Loading Player");
-        player = PlayerFactory.createPlayer();
-
-        LOG.info("Loading Music Providers");
-        MusicProviderFactory.init();
+      LOG.info("Loading Music Providers");
+      MusicProviderFactory.init();
     }
-	
+    catch (Exception e) {
+      LOG.info("Error starting Mephisto: " + e.getMessage(), e);
+      System.exit(-1);
+    }
+  }
 
-	/**
-     * And in the beginning, there was main...
-	 * @param args
-	 */
-	public static void main(String[] args) throws Exception {		
-		instance = new Mephisto();
-        instance.initServices();
-	}
+
+  /**
+   * And in the beginning, there was main...
+   *
+   * @param args
+   */
+  public static void main(String[] args) {
+    instance = new Mephisto();
+    instance.initServices();
+  }
 
 }

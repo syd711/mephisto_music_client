@@ -5,7 +5,7 @@ package de.mephisto.player;
  */
 public class PlayerFactory {
 
-    public static IMusicPlayer createPlayer() {
-        return new MpdPlayer();
-    }
+  public static IMusicPlayer createPlayer() {
+    return new MpdPlayer();
+  }
 }

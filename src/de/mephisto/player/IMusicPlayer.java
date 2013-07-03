@@ -5,9 +5,10 @@ package de.mephisto.player;
  */
 public interface IMusicPlayer {
 
-    /**
-     * Playback of the given stream url.
-     * @param url
-     */
-    public void playUrl(String url);
+  /**
+   * Playback of the given stream url.
+   *
+   * @param url
+   */
+  public void playUrl(String url);
 }

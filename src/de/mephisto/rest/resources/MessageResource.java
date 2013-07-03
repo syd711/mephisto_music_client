@@ -6,17 +6,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("message")
-@Produces( MediaType.APPLICATION_JSON )
+@Produces(MediaType.APPLICATION_JSON)
 public class MessageResource {
-	@GET
-	public ServerInfo message() {
-		ServerInfo info = new ServerInfo();
-	    info.server = System.getProperty( "os.name" )+" "+System.getProperty( "os.version" );
-	    return info;
-	}
-	
-	static class ServerInfo
-	{
-	  public String server;
-	}
+  @GET
+  public ServerInfo message() {
+    ServerInfo info = new ServerInfo();
+    info.server = System.getProperty("os.name") + " " + System.getProperty("os.version");
+    return info;
+  }
+
+  static class ServerInfo {
+    public String server;
+  }
 }

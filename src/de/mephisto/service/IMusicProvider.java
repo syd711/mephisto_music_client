@@ -10,42 +10,47 @@ import org.apache.commons.configuration.Configuration;
  */
 public interface IMusicProvider {
 
-    /**
-     * Initial authentication against the provider, etc.
-     * @return True, if the authentication is successful.
-     */
-	boolean connect();
+  /**
+   * Initial authentication against the provider, etc.
+   *
+   * @return True, if the authentication is successful.
+   */
+  boolean connect();
 
-    /**
-     * Loads all music the provider can provide, obviously.
-     */
-    void loadMusic();
+  /**
+   * Loads all music the provider can provide, obviously.
+   */
+  void loadMusic();
 
-    /**
-     * Returns the name of the provider, used as id for the provider factory.
-     * @return
-     */
-    String getProviderId();
+  /**
+   * Returns the name of the provider, used as id for the provider factory.
+   *
+   * @return
+   */
+  String getProviderId();
 
-    /**
-     * The provider may have to provide an url for the playback, so delegate
-     * the actual play command to it.
-     * @param song
-     */
-    void playSong(IMusicPlayer player, Song song);
-
-
-    /**
-     * Sets the name of the provider.
-     * @param providerId
-     */
-    void setProviderId(String providerId);
+  /**
+   * The provider may have to provide an url for the playback, so delegate
+   * the actual play command to it.
+   *
+   * @param song
+   */
+  void playSong(IMusicPlayer player, Song song);
 
 
-    /**
-     * Sets the configuration file for the provider that has been loaded through
-     * the provider factory.
-     * @param configuration
-     */
-    void setConfiguration(Configuration configuration);
+  /**
+   * Sets the name of the provider.
+   *
+   * @param providerId
+   */
+  void setProviderId(String providerId);
+
+
+  /**
+   * Sets the configuration file for the provider that has been loaded through
+   * the provider factory.
+   *
+   * @param configuration
+   */
+  void setConfiguration(Configuration configuration);
 }
