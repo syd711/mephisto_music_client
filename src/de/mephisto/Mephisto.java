@@ -39,14 +39,15 @@ public class Mephisto {
   private void initServices() {
     try {
       LOG.info("Mephisto is starting");
-      LOG.info("Starting http server on: " + Server.resolveHttpUrl());
-      Server.start();
+
+      LOG.info("Loading Music Providers");
+      MusicProviderFactory.init();
 
       LOG.info("Loading Player");
       player = PlayerFactory.createPlayer();
 
-      LOG.info("Loading Music Providers");
-      MusicProviderFactory.init();
+      LOG.info("Starting http server on: " + Server.resolveHttpUrl());
+      Server.start();
     }
     catch (Exception e) {
       LOG.info("Error starting Mephisto: " + e.getMessage(), e);

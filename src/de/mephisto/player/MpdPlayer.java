@@ -1,5 +1,10 @@
 package de.mephisto.player;
 
+import de.mephisto.model.Playlist;
+import de.mephisto.model.Song;
+import de.mephisto.model.Stream;
+import de.mephisto.service.IMusicProvider;
+import de.mephisto.service.MusicProviderFactory;
 import de.mephisto.util.Config;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.net.telnet.TelnetClient;
@@ -27,7 +32,7 @@ public class MpdPlayer implements IMusicPlayer {
 
   private void connect() {
     try {
-      TelnetClient client = new TelnetClient();
+      client = new TelnetClient();
       String host = config.getString(PROPERTY_HOST);
       int port = config.getInt(PROPERTY_PORT, 6600);
       client.connect(host, port);
@@ -38,16 +43,24 @@ public class MpdPlayer implements IMusicPlayer {
   }
 
   @Override
-  public void playUrl(String url) {
-    LOG.info("Playback of URL: " + url);
+  public void playSongCollection(Playlist songs) {
+    LOG.info("Playback of: " + songs);
     try {
+      Song song = songs.getSongs().iterator().next();
+      IMusicProvider provider = MusicProviderFactory.getProvider(song.getProviderId());
+      String url = provider.getUrl(song);
       String add = "mpc add " + url;
       String play = "mpc play";
       client.getOutputStream().write(add.getBytes());
       client.getOutputStream().write(play.getBytes());
     } catch (Exception e) {
-      LOG.error("Failed to playback '" + url + "': " + e.getMessage(), e);
+      LOG.error("Failed to playback '" + songs + "': " + e.getMessage(), e);
     }
+  }
+
+  @Override
+  public void playStream(Stream stream) {
+    //To change body of implemented methods use File | Settings | File Templates.
   }
 
   @Override

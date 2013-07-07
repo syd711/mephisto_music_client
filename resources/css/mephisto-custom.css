@@ -1,0 +1,60 @@
+/*
+ * Common styles for the UI
+ */
+ .collection-container {
+    position:relative;
+    padding:10px;
+    box-shadow: 2px 1px 5px #353535;
+    height:190px;
+    width:200px;
+    margin:10px;
+    display:inline-block;
+    background-image: -webkit-linear-gradient(#eee, #fff);
+    background-image: -moz-linear-gradient(#eee, #fff);
+    background-image: -o-linear-gradient(#eee, #fff);
+    background-image: linear-gradient(#eee, #fff);
+ }
+
+ .collection-title {
+    padding-top:5px;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-size: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+ }
+
+ .collection-subtitle {
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    color: #555;
+    font-size: 14px;
+    font-weight: bold;
+ }
+
+ .collection-thumbnail {
+    border:1px solid #aaa !important;
+ }
+
+a img.collection-thumbnail:hover {
+    /*opacity:0.4;*/
+    -webkit-filter: brightness(0.65);
+}
+
+ .track-info {
+    position:absolute;
+    margin-left:160px;
+    margin-top:-150px;
+    padding-bottom:5px;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-size: 16px;
+ }
+
+ .time-info {
+    position:absolute;
+    margin-top:-120px;
+    margin-left:160px;
+    padding-bottom:5px;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-size: 16px;
+ }
+

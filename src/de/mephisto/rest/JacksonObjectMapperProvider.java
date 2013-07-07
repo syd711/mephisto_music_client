@@ -6,11 +6,13 @@ import org.codehaus.jackson.map.SerializationConfig.Feature;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 
+/**
+ * Provider implementation for Jersey, we use Jackson here.
+ */
 @Provider
 public class JacksonObjectMapperProvider implements ContextResolver<ObjectMapper> {
 
   ObjectMapper defaultObjectMapper;
-  ObjectMapper combinedObjectMapper;
 
   public JacksonObjectMapperProvider() {
     defaultObjectMapper = createDefaultMapper();

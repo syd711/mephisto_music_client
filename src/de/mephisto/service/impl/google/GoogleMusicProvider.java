@@ -1,11 +1,13 @@
 package de.mephisto.service.impl.google;
 
-import de.mephisto.model.Dictionary;
-import de.mephisto.player.IMusicPlayer;
+import de.mephisto.dictionary.Dictionary;
 import de.mephisto.service.AbstractMusicProvider;
 import gmusic.api.impl.GoogleMusicAPI;
+import gmusic.api.model.Playlist;
+import gmusic.api.model.Playlists;
 import gmusic.api.model.Song;
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +39,12 @@ public class GoogleMusicProvider extends AbstractMusicProvider {
     LOG.info("Loading all songs for " + this);
 
     try {
+      Playlists lists = api.getAllPlaylists();
+      for(Playlist list : lists.getPlaylists()) {
+        de.mephisto.model.Playlist p = playlistFor(list);
+        Dictionary.getInstance().addPlaylist(p);
+      }
+
       Collection<Song> songs = api.getAllSongs();
       for (Song song : songs) {
         de.mephisto.model.Song mSong = songFor(song);
@@ -49,14 +57,27 @@ public class GoogleMusicProvider extends AbstractMusicProvider {
   }
 
   @Override
-  public void playSong(IMusicPlayer player, de.mephisto.model.Song song) {
+  public String getUrl(de.mephisto.model.Song song) {
     Song gSong = (Song) song.getOriginalModel();
     try {
-      String url = api.getSongURL(gSong).toURL().toString();
-      player.playUrl(url);
+      return api.getSongURL(gSong).toURL().toString();
     } catch (Exception e) {
-      LOG.error("Failed to playback " + song + ": " + e.getMessage(), e);
+      LOG.error("Failed to resolve URL of " + song + ": " + e.getMessage(), e);
+      return null;
     }
+  }
+
+  /**
+   * Converts the google music playlist into the local model.
+   * @param list
+   * @return
+   */
+  private de.mephisto.model.Playlist playlistFor(Playlist list) {
+    de.mephisto.model.Playlist p = new de.mephisto.model.Playlist(list.getTitle());
+    for(Song song : list.getPlaylist()) {
+      p.getSongs().add(songFor(song));
+    }
+    return p;
   }
 
   /**
@@ -72,7 +93,11 @@ public class GoogleMusicProvider extends AbstractMusicProvider {
 
     mSong.setId(song.getId());
     mSong.setName(song.getName());
-    mSong.setAlbumArtUrl(song.getAlbumArtUrl());
+
+    if(!StringUtils.isEmpty(song.getAlbumArtUrl())) {
+      mSong.setAlbumArtUrl("http:" + song.getAlbumArtUrl());
+    }
+
     mSong.setAlbum(song.getAlbum());
     mSong.setArtist(song.getAlbumArtist());
     mSong.setComment(song.getComment());

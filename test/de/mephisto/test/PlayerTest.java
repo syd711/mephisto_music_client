@@ -1,6 +1,6 @@
 package de.mephisto.test;
 
-import de.mephisto.model.Dictionary;
+import de.mephisto.dictionary.Dictionary;
 import de.mephisto.model.Song;
 import de.mephisto.player.IMusicPlayer;
 import de.mephisto.player.MpdPlayer;
@@ -15,7 +15,7 @@ import org.junit.Test;
  * Time: 22:28
  * To change this template use File | Settings | File Templates.
  */
-public class TelnetTest {
+public class PlayerTest {
 
     @Test
     public void testPlayback() {
@@ -28,6 +28,6 @@ public class TelnetTest {
         Song song = Dictionary.getInstance().getSongs().iterator().next();
 
         IMusicPlayer player = new MpdPlayer();
-        provider.playSong(player, song);
+//        provider.playSong(player, song);
     }
 }

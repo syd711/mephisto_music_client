@@ -70,4 +70,13 @@ public class MusicProviderFactory {
   public static Collection<IMusicProvider> getProviders() {
     return providerMap.values();
   }
+
+  /**
+   * Returns the music provider with the given id.
+   * @param providerId
+   * @return
+   */
+  public static IMusicProvider getProvider(String providerId) {
+    return providerMap.get(providerId);
+  }
 }

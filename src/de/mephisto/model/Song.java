@@ -3,7 +3,7 @@ package de.mephisto.model;
 /**
  * The model that represents a song.
  */
-public class Song extends MModel {
+public class Song extends MModel implements Comparable<Song> {
   private String id;
   private String name;
   private int year;
@@ -52,7 +52,7 @@ public class Song extends MModel {
 
   @Override
   public String toString() {
-    return "'" + name + "' (" + artist + ")";
+    return "'" + name + "' by " + artist;
   }
 
   public String getGenre() {
@@ -149,5 +149,10 @@ public class Song extends MModel {
 
   public void setComposer(String composer) {
     this.composer = composer;
+  }
+
+  @Override
+  public int compareTo(Song o) {
+    return track-o.getTrack();
   }
 }

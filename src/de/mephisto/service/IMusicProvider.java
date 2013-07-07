@@ -30,12 +30,11 @@ public interface IMusicProvider {
   String getProviderId();
 
   /**
-   * The provider may have to provide an url for the playback, so delegate
-   * the actual play command to it.
+   * The provider may have to provide an url for the playback.
    *
    * @param song
    */
-  void playSong(IMusicPlayer player, Song song);
+  String getUrl(Song song);
 
 
   /**
