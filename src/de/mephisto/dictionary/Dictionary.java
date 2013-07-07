@@ -122,9 +122,6 @@ public class Dictionary {
       Album album = getAlbum(song);
       if(!album.containsSong(song)) {
         album.getSongs().add(song);
-        if(!StringUtils.isEmpty(song.getAlbumArtUrl()) && StringUtils.isEmpty(album.getArtUrl())) {
-          album.setArtUrl(song.getAlbumArtUrl());
-        }
       }
     }
   }
@@ -146,6 +143,9 @@ public class Dictionary {
       album = albums.get(song.getAlbum());
     }
 
+    if(!StringUtils.isEmpty(song.getAlbumArtUrl()) && StringUtils.isEmpty(album.getArtUrl())) {
+      album.setArtUrl(song.getAlbumArtUrl());
+    }
     if(StringUtils.isEmpty(album.getArtist()) && !StringUtils.isEmpty(song.getArtist())) {
       album.setArtist(song.getArtist());
     }

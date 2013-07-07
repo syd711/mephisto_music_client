@@ -100,6 +100,9 @@ public class GoogleMusicProvider extends AbstractMusicProvider {
 
     mSong.setAlbum(song.getAlbum());
     mSong.setArtist(song.getAlbumArtist());
+    if(StringUtils.isEmpty(song.getAlbumArtist()) && !StringUtils.isEmpty(song.getArtist())) {
+      mSong.setArtist(song.getArtist());
+    }
     mSong.setComment(song.getComment());
     mSong.setComposer(song.getComposer());
     mSong.setTrack(song.getTrack());

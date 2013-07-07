@@ -15,12 +15,12 @@ import javax.ws.rs.core.MediaType;
 /**
  * REST resource for all album relevant actions.
  */
-@Path("albums")
+@Path("collections")
 @Produces(MediaType.APPLICATION_JSON)
-public class AlbumResource {
+public class CollectionResource {
 
   @GET
-  @Path("all")
+  @Path("albums")
   @JsonView({JSONViews.AlbumsView.class})
   public PlaylistCollection getAlbums(@PathParam("sort") int sortType) {
     PlaylistCollection collection = new PlaylistCollection();

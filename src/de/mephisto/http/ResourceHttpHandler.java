@@ -51,6 +51,9 @@ public class ResourceHttpHandler implements HttpHandler {
         else if (targetFile.getName().endsWith("js")) {
           mimeType = "text/javascript";
         }
+        else if(targetFile.getName().contains(".woff")) {
+          mimeType = "application/x-font-woff";
+        }
         else if (mimeType == null) {
           mimeType = "application/octet-stream";
         }

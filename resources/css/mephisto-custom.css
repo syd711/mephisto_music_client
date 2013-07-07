@@ -1,24 +1,46 @@
 /*
  * Common styles for the UI
  */
+a:link {
+    color:#353535;
+    text-decoration:none;
+}
+a:visited {
+    color:#353535;
+    text-decoration:none;
+}
+a:focus {
+    color:#353535;
+    text-decoration:none;
+}
+a:hover {
+    color:#353535;
+    text-decoration:none;
+}
+a:active {
+    color:#353535;
+    text-decoration:none;
+}
+
  .collection-container {
     position:relative;
     padding:10px;
-    box-shadow: 2px 1px 5px #353535;
+    box-shadow: 3px 2px 6px #252525;
     height:190px;
     width:200px;
     margin:10px;
     display:inline-block;
-    background-image: -webkit-linear-gradient(#eee, #fff);
-    background-image: -moz-linear-gradient(#eee, #fff);
-    background-image: -o-linear-gradient(#eee, #fff);
-    background-image: linear-gradient(#eee, #fff);
+    background-image: -webkit-linear-gradient(#fff, #fff);
+    background-image: -moz-linear-gradient(#fff, #fff);
+    background-image: -o-linear-gradient(#fff, #fff);
+    background-image: linear-gradient(#fff, #fff);
  }
 
  .collection-title {
     padding-top:5px;
     font-family: 'Yanone Kaffeesatz', sans-serif;
     font-size: 18px;
+    color: #555;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -26,9 +48,12 @@
 
  .collection-subtitle {
     font-family: 'Yanone Kaffeesatz', sans-serif;
-    color: #555;
+    color: #aaa !important;
     font-size: 14px;
     font-weight: bold;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
  }
 
  .collection-thumbnail {
@@ -37,7 +62,8 @@
 
 a img.collection-thumbnail:hover {
     /*opacity:0.4;*/
-    -webkit-filter: brightness(0.65);
+    -webkit-transition: all 0.5s;
+    -webkit-filter: brightness(0.75);
 }
 
  .track-info {
@@ -56,5 +82,18 @@ a img.collection-thumbnail:hover {
     padding-bottom:5px;
     font-family: 'Yanone Kaffeesatz', sans-serif;
     font-size: 16px;
+ }
+
+
+ .play-wrapper {
+    -webkit-transition: all 0.5s;
+    display: none;
+ }
+ .hover:hover .play-wrapper {
+    -webkit-transition: all 0.5s;
+    display : block;
+    position:absolute;
+    margin-top:-90px;
+    margin-left:160px;
  }
 
