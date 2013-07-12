@@ -1,5 +1,8 @@
 package de.mephisto.model;
 
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * The model that represents a song.
  */
@@ -18,8 +21,9 @@ public class Song extends MModel implements Comparable<Song> {
   private String comment;
   private String composer;
 
-  private Object originalModel;
   private String providerId;
+  @JsonIgnore
+  private Object originalModel;
 
   public Song(String providerId) {
     this.providerId = providerId;
@@ -149,6 +153,13 @@ public class Song extends MModel implements Comparable<Song> {
 
   public void setComposer(String composer) {
     this.composer = composer;
+  }
+
+  public String getDuration() {
+    if(this.durationMillis > 0) {
+      return DateFormatUtils.format(this.durationMillis, "mm:ss");
+    }
+    return "";
   }
 
   @Override

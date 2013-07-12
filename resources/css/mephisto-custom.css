@@ -22,13 +22,36 @@ a:active {
     text-decoration:none;
 }
 
- .collection-container {
+/*
+ * Global layout
+ */
+.title-bar {
+    height:40px;
+    background-color:#fff;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-size: 30px;
+    color:#aaa;
+    font-weight:normal;
+}
+
+.title-bar-name {
+    margin-left:20px;
+}
+
+.title-bar-title {
+    color:#666;
+}
+
+
+
+
+ .collections-container {
     position:relative;
-    padding:10px;
     box-shadow: 3px 2px 6px #252525;
-    height:190px;
-    width:200px;
-    margin:10px;
+    height:205px;
+    width:150px;
+    margin-bottom:15px;
+    margin-right:15px;
     display:inline-block;
     background-image: -webkit-linear-gradient(#fff, #fff);
     background-image: -moz-linear-gradient(#fff, #fff);
@@ -38,6 +61,7 @@ a:active {
 
  .collection-title {
     padding-top:5px;
+    padding-left:5px;
     font-family: 'Yanone Kaffeesatz', sans-serif;
     font-size: 18px;
     color: #555;
@@ -47,8 +71,10 @@ a:active {
  }
 
  .collection-subtitle {
+    padding-top:5px;
+    padding-left:5px;
     font-family: 'Yanone Kaffeesatz', sans-serif;
-    color: #aaa !important;
+    color: #353535 !important;
     font-size: 14px;
     font-weight: bold;
     text-overflow: ellipsis;
@@ -57,43 +83,55 @@ a:active {
  }
 
  .collection-thumbnail {
-    border:1px solid #aaa !important;
+    border-bottom:1px solid #fa9600 !important;
  }
 
 a img.collection-thumbnail:hover {
-    /*opacity:0.4;*/
-    -webkit-transition: all 0.5s;
-    -webkit-filter: brightness(0.75);
+     /*opacity:0.4;*/
+     -webkit-transition: all 0.5s;
+     -webkit-filter: brightness(0.75);
 }
 
- .track-info {
-    position:absolute;
-    margin-left:160px;
-    margin-top:-150px;
-    padding-bottom:5px;
+ /**
+  * Detail view
+  */
+ .collection-container {
+    position:relative;
+    box-shadow: 3px 2px 6px #252525;
+    height:150px;
+    width:150px;
+    display:inline-block;
+    background-image: -webkit-linear-gradient(#fff, #fff);
+    background-image: -moz-linear-gradient(#fff, #fff);
+    background-image: -o-linear-gradient(#fff, #fff);
+    background-image: linear-gradient(#fff, #fff);
+ }
+
+ td, th {
+    text-align:left;
     font-family: 'Yanone Kaffeesatz', sans-serif;
-    font-size: 16px;
+    font-size: 18px;
+    color:#353535;
+    border-bottom:1px solid #ccc;
  }
 
- .time-info {
-    position:absolute;
-    margin-top:-120px;
-    margin-left:160px;
-    padding-bottom:5px;
-    font-family: 'Yanone Kaffeesatz', sans-serif;
-    font-size: 16px;
- }
+.track {
+    text-align:center;
+}
+.row-selected {
+    background-color: #eee;
+}
 
+.row, .row-selected {
+    height:40px;
+}
 
- .play-wrapper {
-    -webkit-transition: all 0.5s;
-    display: none;
- }
- .hover:hover .play-wrapper {
-    -webkit-transition: all 0.5s;
-    display : block;
-    position:absolute;
-    margin-top:-90px;
-    margin-left:160px;
- }
+.row:hover {
+    background-color: #eee;
+    cursor:pointer;
+}
+
+.row .track :hover {
+    background-color: #444;
+}
 

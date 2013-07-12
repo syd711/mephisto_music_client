@@ -5,36 +5,60 @@
     <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
     <script src="js/mephisto.js"></script>
     <link rel="stylesheet" href="css/mephisto-custom.css"/>
-    <link rel="stylesheet" href="css/mephisto.min.css"/>
-    <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700,300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/mephisto_o.css"/>
+    <link href="http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700,300" rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="css/font-awesome.min.css">
+    <title>Mephisto Music Client</title>
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
 </head>
 <body onload="albums()">
 <div data-role="page" data-theme="a">
 
 
 
-    <div data-role="header" data-theme="a">
-        <div data-role="navbar">
-            <ul>
-                <li><a href="#" onClick="showInterprets()">Interpreten</a></li>
-                <li><a href="#" onClick="albums()">Alben</a></li>
-                <li><a href="#" onClick="showTitles()">Titel</a></li>
-                <li><a href="#" onClick="showGenres()">Genres</a></li>
-            </ul>
+    <div data-role="header" data-theme="a" data-position="fixed">
+        <div style="height:55px;background-color:#ddd;border-bottom:1px solid #ccc;">
+            <table width="100%">
+                <tr>
+                    <td width="5">&nbsp;</td>
+                    <td width="70%"><a href="#" onclick="albums()"><img src="img/logo.png" border="0" alt="" /></a></td>
+                    <td><input type="text" data-theme="a" name="search" id="search" value="" placeholder="Search..." style="width:200px;height:30px;"></td>
+                    <td width="10">&nbsp;</td>
+                </tr>
+            </table>
+        </div>
+        <div data-role="navbar" class="title-bar">
+            <span class="title-bar-name" id="title-bar-name"></span>
+            <span id="title-bar-separator">&nbsp;-&nbsp;</span>
+            <span class="title-bar-title" id="title-bar-title"></span>
+            <span><a href="#sidebar">* Sidebar</a></span>
         </div>
     </div>
 
     <!--Sidebar-->
-    <div id="sidebar" data-theme="a" data-role="panel" data-position="left" data-dismissible="false" data-swipe-close="false" data-display="push">
+    <div id="sidebar" data-theme="a" data-role="panel" data-position="left" data-dismissible="true" data-swipe-close="true" data-display="overlay">
         Sidepanel
     </div>
 
     <div data-role="content" id="content">
-        <a href="#sidebar">Sidebar</a>
+
 
        <div id="collection"></div>
-       <div id="playlist"></div>
+       <div id="playlist">
+           <div id="playlist-header" style="height:170px;"></div>
+           <table width="100%" cellpadding="0" cellspacing="0">
+               <thead>
+               <tr>
+                   <th width="50" class="track">#</th>
+                   <th>Name</th>
+                   <th>Interpret</th>
+                   <th>&nbsp;&nbsp;&nbsp;<i class="icon-time icon-1x"></i></th>
+               </tr>
+               </thead>
+               <tbody id="playlist-table-body">
+               </tbody>
+           </table>
+       </div>
 
     </div>
     <!-- /content -->
