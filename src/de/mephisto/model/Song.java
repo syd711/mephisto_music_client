@@ -14,11 +14,9 @@ public class Song extends MModel implements Comparable<Song> {
   private String genre;
   private String album;
   private String albumArtUrl;
-  private String url;
   private long durationMillis;
   private float creationDate;
   private int track;
-  private String comment;
   private String composer;
 
   private String providerId;
@@ -83,14 +81,6 @@ public class Song extends MModel implements Comparable<Song> {
     this.year = year;
   }
 
-  public String getUrl() {
-    return url;
-  }
-
-  public void setUrl(String url) {
-    this.url = url;
-  }
-
   public float getCreationDate() {
     return creationDate;
   }
@@ -137,14 +127,6 @@ public class Song extends MModel implements Comparable<Song> {
 
   public void setTrack(int track) {
     this.track = track;
-  }
-
-  public String getComment() {
-    return comment;
-  }
-
-  public void setComment(String comment) {
-    this.comment = comment;
   }
 
   public String getComposer() {

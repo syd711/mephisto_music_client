@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Wrapper for a list of several albums or collections
  */
-public class PlaylistCollection {
+public class PlaylistCollection extends MModel {
   private List<Playlist> collections = new ArrayList<Playlist>();
 
   public List<Playlist> getItems() {

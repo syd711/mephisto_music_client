@@ -1,37 +1,45 @@
-/*
- * Common styles for the UI
+/**
+ * Links
  */
-a:link {
-    color:#353535;
-    text-decoration:none;
-}
-a:visited {
-    color:#353535;
-    text-decoration:none;
-}
-a:focus {
-    color:#353535;
-    text-decoration:none;
-}
+a { text-decoration:none; }
+a:link { font-weight:normal; text-decoration:none; }
+a:visited { font-weight:normal; text-decoration:none; }
+a:focus { font-weight:normal; text-decoration:underline; }
 a:hover {
-    color:#353535;
-    text-decoration:none;
+    font-weight:normal;
+    text-decoration:underline;
 }
 a:active {
-    color:#353535;
-    text-decoration:none;
+    font-weight:normal;
+}
+
+.a-album {
+    color: #555;
+}
+
+.a-artist {
+    color: #555;
+}
+
+.a-genre {
+    color: #999;
 }
 
 /*
  * Global layout
  */
 .title-bar {
-    height:40px;
+    height:48px;
     background-color:#fff;
     font-family: 'Yanone Kaffeesatz', sans-serif;
-    font-size: 30px;
     color:#aaa;
     font-weight:normal;
+}
+
+.title-bar-name, .title-bar-title, .title-bar-separator {
+    text-shadow: 0 0 0 #fff !important;
+    color: #aaa;
+    font-size: 30px;
 }
 
 .title-bar-name {
@@ -39,15 +47,12 @@ a:active {
 }
 
 .title-bar-title {
-    color:#666;
+    color:#555;
 }
 
-
-
-
- .collections-container {
+.collections-container {
     position:relative;
-    box-shadow: 3px 2px 6px #252525;
+    box-shadow: 2px 1px 4px #999;
     height:205px;
     width:150px;
     margin-bottom:15px;
@@ -57,9 +62,9 @@ a:active {
     background-image: -moz-linear-gradient(#fff, #fff);
     background-image: -o-linear-gradient(#fff, #fff);
     background-image: linear-gradient(#fff, #fff);
- }
+}
 
- .collection-title {
+.collection-title {
     padding-top:5px;
     padding-left:5px;
     font-family: 'Yanone Kaffeesatz', sans-serif;
@@ -68,9 +73,9 @@ a:active {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
- }
+}
 
- .collection-subtitle {
+.collection-subtitle {
     padding-top:5px;
     padding-left:5px;
     font-family: 'Yanone Kaffeesatz', sans-serif;
@@ -80,11 +85,11 @@ a:active {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
- }
+}
 
- .collection-thumbnail {
-    border-bottom:1px solid #fa9600 !important;
- }
+.collection-thumbnail {
+    border-bottom:1px solid #aaa !important;
+}
 
 a img.collection-thumbnail:hover {
      /*opacity:0.4;*/
@@ -92,12 +97,13 @@ a img.collection-thumbnail:hover {
      -webkit-filter: brightness(0.75);
 }
 
+
  /**
   * Detail view
   */
  .collection-container {
     position:relative;
-    box-shadow: 3px 2px 6px #252525;
+    box-shadow: 2px 1px 4px #999;
     height:150px;
     width:150px;
     display:inline-block;
@@ -107,12 +113,25 @@ a img.collection-thumbnail:hover {
     background-image: linear-gradient(#fff, #fff);
  }
 
+ .album-data, .album-meta-data {
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    color: #555 !important;
+    font-size: 18px;
+ }
+
+ .album-meta-data {
+    color: #353535 !important;
+ }
+
  td, th {
+    height:40px;
     text-align:left;
     font-family: 'Yanone Kaffeesatz', sans-serif;
-    font-size: 18px;
     color:#353535;
-    border-bottom:1px solid #ccc;
+ }
+
+ .tracklist-column {
+    border-bottom: 1px solid #aaa;
  }
 
 .track {
@@ -123,7 +142,8 @@ a img.collection-thumbnail:hover {
 }
 
 .row, .row-selected {
-    height:40px;
+    font-size:18px;
+    border-bottom:1px solid #aaa;
 }
 
 .row:hover {
@@ -135,3 +155,32 @@ a img.collection-thumbnail:hover {
     background-color: #444;
 }
 
+/**
+ * jQuery Theme Overwriting
+ */
+.ui-body-b, .ui-overlay-b {
+    text-shadow: 0 0px 0 #fff !important;
+}
+.progress-bar input[type=number], .ui-slider-handle {
+  display: none;
+}
+div.progressbar {
+    border: 1px solid #ccc;
+    background-color: white;
+    height: 3px;
+    margin-top: -5px;
+    margin-left: 38px;
+}
+
+div.progress {
+    background-color:#fb8822;
+    height:3px;
+    /*width:50%;  Fortschritt */
+}
+
+/**
+ * Player
+ */
+.player-icon {
+     opacity: 0.7;
+}

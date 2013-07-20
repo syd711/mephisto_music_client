@@ -1,0 +1,6 @@
+.sound-low {
+    background-image: url(img/sound_high.png);
+    height:32px;
+    width:32px;
+    background-repeat: no-repeat;
+}

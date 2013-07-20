@@ -38,6 +38,16 @@ public class Dictionary {
 
 
   /**
+   * Looks up the collection for the given id, might be an album or a genre, ...
+   * @param id
+   * @return
+   */
+  public Playlist getPlaylist(int id) {
+    Playlist col = (Playlist)globalDict.get(id);
+    return col;
+  }
+
+  /**
    * Returns a list of all albums.
    * @return
    * @param sortType
@@ -148,6 +158,13 @@ public class Dictionary {
     }
     if(StringUtils.isEmpty(album.getArtist()) && !StringUtils.isEmpty(song.getArtist())) {
       album.setArtist(song.getArtist());
+    }
+    if(StringUtils.isEmpty(album.getGenre()) && !StringUtils.isEmpty(song.getGenre())) {
+      album.setGenre(song.getGenre());
+    }
+
+    if(song.getYear() > 0) {
+      album.setYear(song.getYear());
     }
     return album;
   }

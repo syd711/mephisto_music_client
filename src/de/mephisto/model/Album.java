@@ -5,6 +5,8 @@ package de.mephisto.model;
  */
 public class Album extends Playlist {
   private String artist;
+  private String genre;
+  private int year;
 
   public Album(String artist, String name) {
     super(name);
@@ -22,5 +24,21 @@ public class Album extends Playlist {
   @Override
   public String toString() {
     return "Album '" + getName() + "' by '" + artist + "', tracks: " + getSize();
+  }
+
+  public String getGenre() {
+    return genre;
+  }
+
+  public void setGenre(String genre) {
+    this.genre = genre;
+  }
+
+  public int getYear() {
+    return year;
+  }
+
+  public void setYear(int year) {
+    this.year = year;
   }
 }

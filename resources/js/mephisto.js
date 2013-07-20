@@ -4,6 +4,16 @@
 $.mobile.page.prototype.options.domCache = false;
 
 /**
+ * The onload handler of the site
+ */
+function initSite() {
+    albums();
+    $('#volume-slider').hide();
+    $('#progressbar').hide();
+    $('#player-cover').hide();
+}
+
+/**
  * Loads the album to a responsive layout
  */
 function albums() {
@@ -19,11 +29,11 @@ function albums() {
             if(!url || url.length === 0) {
                 url = 'img/cover.png';
             }
-            var html='<a href="#" onClick="showCollection(' + value.mid + ')"><div class="collections-container hover">';
-            html+='<div><img class="collection-thumbnail" with="150" height="150" alt="' + value.artist + '" src="' + url + '" /></div>';
-            html+='<div class="collection-title">' + value.name + '</div>';
-            html+='<div class="collection-subtitle">' + artist + '</div>';
-            html+='</div></a>';
+            var html='<div class="collections-container hover">';
+            html+='<div><a href="#" onClick="showCollection(' + value.mid + ')"><img class="collection-thumbnail" with="150" height="150" alt="' + value.artist + '" src="' + url + '" /></a></div>';
+            html+='<div class="collection-title"><a class="a-album" href="#" onclick="showCollection(' + value.mid + ')">' + value.name + '</a></div>';
+            html+='<div class="collection-subtitle"><a href="#" class="a-artist" onclick="">' + artist + '</a></div>';
+            html+='</div>';
             items.push(html);
         });
         $('#collection').empty();
@@ -44,9 +54,18 @@ function showCollection(id) {
             if(!url || url.length === 0) {
             url = 'img/cover.png';
             }
-            var html='<a href="#" onClick=""><div class="collection-container hover">';
-            html+='<div><img with="150" height="150" alt="' + value.artist + '" src="' + url + '" /></div>';
+            var html='<a href="#" onClick=""><div class=" hover">';
+            html+='<div id="collection-mid" data-mid="' + id + '"><img id="album-cover" with="150" height="150" alt="' + value.artist + '" src="' + url + '" /></div>';
             html+='</div></a>';
+            html+='<div style="margin-top: -150px;margin-left: 170px;">';
+            html+='<div class="album-data">' + value.songs.length + ' Tracks</div>';
+            html+='<div class="album-data">' + value.duration + '</div>';
+            html+='<div style="height:10px;"></div>';
+            html+='<div class="album-meta-data">' + value.genre + '</div>';
+            if(value.year > 0) {
+                html+='<div class="album-meta-data">' + value.year + '</div>';
+            }
+            html+='</div>';
             items.push(html);
 
             setNameAndTitle(value.name, artist);
@@ -60,10 +79,10 @@ function showCollection(id) {
                     track = '-';
                 }
                 var html='<tr id="row-track-' + song.mid + '" class="row" onclick="playTrack(' + song.mid + ')" onmouseover="showPlay(' + song.mid+ ')" onmouseout="hidePlay(' + song.mid + ',' + track +')">';
-                html+='<td class="track" id="column-track-' + song.mid + '">' + track + '</td>';
-                html+='<td>' + song.name + '</td>';
-                html+='<td>' + song.artist + '</td>';
-                html+='<td>' + song.duration + '</td>';
+                html+='<td class="tracklist-column track" id="column-track-' + song.mid + '">' + track + '</td>';
+                html+='<td class="tracklist-column">' + song.name + '</td>';
+                html+='<td class="tracklist-column">' + song.artist + '</td>';
+                html+='<td class="tracklist-column">' + song.duration + '</td>';
                 html+='</tr>';
                 items.push(html);
             });
@@ -77,7 +96,7 @@ function showCollection(id) {
  */
 function setNameAndTitle(name, title) {
     $('#title-bar-name').html(name);
-    $('#title-bar-title').html(title);
+    $('#title-bar-title').html('<a class="a-album" href="#">' + title + '</a>');
     if(title && title.length > 0) {
         $('#title-bar-separator').show();
     }
@@ -96,6 +115,7 @@ function playTrack(id) {
         $('#'+rowId).removeClass('row-selected');
     }
     $('#row-track-' + id).addClass('row-selected');
+    play(id);
 }
 
 /**

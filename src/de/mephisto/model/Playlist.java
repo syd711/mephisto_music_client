@@ -1,6 +1,7 @@
 package de.mephisto.model;
 
 import de.mephisto.rest.JSONViews;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 
@@ -20,6 +21,8 @@ public class Playlist extends MModel {
   private String name;
   private String artUrl;
   private int playlistSize = -1;
+
+  private Song activeSong;
 
   public Playlist(String name) {
     this.name = name;
@@ -57,6 +60,18 @@ public class Playlist extends MModel {
     this.artUrl = artUrl;
   }
 
+  public String getDuration() {
+    long durationMillis = 0;
+    for(Song songs : getSongs()) {
+      durationMillis+= songs.getDurationMillis();
+    }
+    if(durationMillis > 0) {
+      durationMillis-=3600000;
+      return DateFormatUtils.format(durationMillis, "HH:mm:ss");
+    }
+    return "";
+  }
+
   /**
    * Checks if the given song is already part of the playlist.
    * @param compare
@@ -69,5 +84,13 @@ public class Playlist extends MModel {
       }
     }
     return false;
+  }
+
+  public void setActiveSong(Song activeSong) {
+    this.activeSong = activeSong;
+  }
+
+  public Song getActiveSong() {
+    return activeSong;
   }
 }
