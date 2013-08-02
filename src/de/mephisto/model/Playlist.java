@@ -5,10 +5,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * A collection of songs, identified by a name.
@@ -84,6 +81,50 @@ public class Playlist extends MModel {
       }
     }
     return false;
+  }
+
+  /**
+   * Returns the next song or null if no next song is available.
+   * @return
+   */
+  public Song nextSong() {
+    Iterator<Song> it = getSongs().iterator();
+    if(activeSong == null) {
+      activeSong = it.next();
+      return activeSong;
+    }
+    while(it.hasNext()) {
+      Song next = it.next();
+      if(next.equals(activeSong) && it.hasNext()) {
+        activeSong = it.next();
+        return activeSong;
+      }
+    }
+    activeSong = null;
+    return null;
+  }
+
+  /**
+   * Returns the previous song or null if there is no previous song.
+   * @return
+   */
+  public Song previousSong() {
+    Iterator<Song> it = getSongs().iterator();
+    if(activeSong == null) {
+      activeSong = it.next();
+      return activeSong;
+    }
+    Song prev = null;
+    while(it.hasNext()) {
+      Song next = it.next();
+      if(next.equals(activeSong)) {
+        activeSong = prev;
+        return activeSong;
+      }
+      prev = next;
+    }
+    activeSong = null;
+    return null;
   }
 
   public void setActiveSong(Song activeSong) {

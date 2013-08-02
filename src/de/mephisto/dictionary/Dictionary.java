@@ -50,11 +50,10 @@ public class Dictionary {
   /**
    * Returns a list of all albums.
    * @return
-   * @param sortType
    */
-  public List<Playlist> getAlbumsWithoutSongs(int sortType) {
+  public List<Playlist> getAlbums() {
     List<Playlist> list = new ArrayList(albums.values());
-    Collections.sort(list, new SongCollectionComparator(sortType));
+    Collections.sort(list, new SongCollectionComparator());
     return list;
   }
 
@@ -167,5 +166,63 @@ public class Dictionary {
       album.setYear(song.getYear());
     }
     return album;
+  }
+
+
+
+  public List<Playlist> getAlbumsOfArtist(int mid) {
+    List<Playlist> lists = new ArrayList<Playlist>();
+    Album album = getAlbum(mid);
+    Iterator<Album> it = albums.values().iterator();
+    while(it.hasNext()) {
+      Album a = it.next();
+      String artist = a.getArtist();
+      if(!StringUtils.isEmpty(artist) && artist.equalsIgnoreCase(album.getArtist())) {
+        lists.add(a);
+      }
+    }
+    return lists;
+  }
+
+  public List<Playlist> getAlbumsOfGenre(int mid) {
+    List<Playlist> lists = new ArrayList<Playlist>();
+    Album album = getAlbum(mid);
+    Iterator<Album> it = albums.values().iterator();
+    while(it.hasNext()) {
+      Album a = it.next();
+      String genre = a.getGenre();
+      if(!StringUtils.isEmpty(genre) && genre.equalsIgnoreCase(album.getGenre())) {
+        lists.add(a);
+      }
+    }
+    return lists;
+  }
+
+  /**
+   * Searches for albums and songs.
+   * @param term
+   * @return
+   */
+  public List<Playlist> search(String term) {
+    List<Playlist> lists = new ArrayList<Playlist>();
+    List<Playlist> albums = getAlbums();
+    for(Playlist album : albums) {
+      Album playlist = (Album)album;
+      if(playlist.getName().toLowerCase().contains(term.toLowerCase())) {
+        lists.add(playlist);
+        break;
+      }
+      if(playlist.getArtist().toLowerCase().contains(term.toLowerCase())) {
+        lists.add(playlist);
+        break;
+      }
+      for(Song song : playlist.getSongs()) {
+        if(song.getName().toLowerCase().contains(term.toLowerCase())) {
+          lists.add(playlist);
+          break;
+        }
+      }
+    }
+    return lists;
   }
 }

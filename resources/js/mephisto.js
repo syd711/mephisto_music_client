@@ -7,10 +7,25 @@ $.mobile.page.prototype.options.domCache = false;
  * The onload handler of the site
  */
 function initSite() {
-    albums();
-    $('#volume-slider').hide();
-    $('#progressbar').hide();
-    $('#player-cover').hide();
+    hidePlaylistView();
+    initPlayer();
+    initSearch();
+}
+
+function initSearch() {
+    $('#search').keypress(function (e) {
+        if (e.which == 13) {
+            var value = $('#search').val();
+            if(value.length > 0) {
+                hidePlaylistView();
+                showCollectionView();
+                setNameAndTitle('Search Result for "' + value + '"', '');
+                $.getJSON('/rest/collections/search?term=' + value, function(data) {
+                    showCollections(data.items);
+                });
+            }
+        }
+    });
 }
 
 /**
@@ -20,25 +35,70 @@ function albums() {
     hidePlaylistView();
     showCollectionView();
     setNameAndTitle('Albums', '');
+    loading('Loading Albums');
     $.getJSON('/rest/collections/albums', function(data) {
-        var albums = data.items;
-        var items = [];
-        $.each(albums, function(key, value) {
-            var url = value.artUrl;
-            var artist = value.artist || '&nbsp;';
-            if(!url || url.length === 0) {
-                url = 'img/cover.png';
-            }
-            var html='<div class="collections-container hover">';
-            html+='<div><a href="#" onClick="showCollection(' + value.mid + ')"><img class="collection-thumbnail" with="150" height="150" alt="' + value.artist + '" src="' + url + '" /></a></div>';
-            html+='<div class="collection-title"><a class="a-album" href="#" onclick="showCollection(' + value.mid + ')">' + value.name + '</a></div>';
-            html+='<div class="collection-subtitle"><a href="#" class="a-artist" onclick="">' + artist + '</a></div>';
-            html+='</div>';
-            items.push(html);
-        });
-        $('#collection').empty();
-        $('#collection').append(items);
+        showCollections(data.items);
+        loaded();
     });
+}
+
+/**
+ * Looks up all albums of the given collection.
+ */
+function artistAlbums(collectionId) {
+    hidePlaylistView();
+    hideCollectionView();
+    setNameAndTitle('Albums', '');
+    loading('Loading Albums');
+    $.getJSON('/rest/collections/artist/albums/' + collectionId, function(data) {
+        if(data.items.length > 0) {
+            setNameAndTitle('Albums', data.items[0].artist);
+            setToolbarLink('artistAlbums(' + collectionId + ')');
+        }
+        showCollections(data.items);
+        loaded();
+    });
+}
+
+/**
+ * Looks up all albums of the given genre.
+ */
+function genre(collectionId) {
+    hidePlaylistView();
+    hideCollectionView();
+    setNameAndTitle('Genre', '');
+    loading('Loading Genres');
+    $.getJSON('/rest/collections/genre/albums/' + collectionId, function(data) {
+        if(data.items.length > 0) {
+            setNameAndTitle('Genre', data.items[0].genre);
+            setToolbarLink('genre(' + collectionId + ')');
+        }
+        showCollections(data.items);
+        loaded();
+    });
+}
+
+/**
+ * Displays the given list of collections.
+ */
+function showCollections(collectionsItems) {
+    var items = [];
+    $.each(collectionsItems, function(key, value) {
+        var url = value.artUrl;
+        var artist = value.artist || '&nbsp;';
+        if(!url || url.length === 0) {
+            url = 'img/cover.png';
+        }
+        var html='<div class="collections-container hover">';
+        html+='<div><a href="#" onClick="showCollection(' + value.mid + ')"><img class="collection-thumbnail" with="150" height="150" alt="' + value.artist + '" src="' + url + '" /></a></div>';
+        html+='<div class="collection-title"><a class="a-album" href="#" onclick="showCollection(' + value.mid + ')">' + value.name + '</a></div>';
+        html+='<div class="collection-subtitle"><a href="#" class="a-album" onclick="artistAlbums(\'' + value.mid + '\')">' + artist + '</a></div>';
+        html+='</div>';
+        items.push(html);
+    });
+    $('#collection').empty();
+    $('#collection').append(items);
+    showCollectionView();
 }
 
 /**
@@ -47,6 +107,7 @@ function albums() {
 function showCollection(id) {
     hideCollectionView();
     showPlaylistView();
+    loading('Loading Album');
     $.getJSON('/rest/collections/album/' + id, function(value) {
             var items = [];
             var url = value.artUrl;
@@ -61,7 +122,10 @@ function showCollection(id) {
             html+='<div class="album-data">' + value.songs.length + ' Tracks</div>';
             html+='<div class="album-data">' + value.duration + '</div>';
             html+='<div style="height:10px;"></div>';
-            html+='<div class="album-meta-data">' + value.genre + '</div>';
+            if(value.genre) {
+                html+='<div class="album-meta-data"><a class="a-album" href="#" onclick="genre(\'' + id + '\')">' + value.genre + '</a></div>';
+            }
+
             if(value.year > 0) {
                 html+='<div class="album-meta-data">' + value.year + '</div>';
             }
@@ -69,6 +133,7 @@ function showCollection(id) {
             items.push(html);
 
             setNameAndTitle(value.name, artist);
+            setToolbarLink('artistAlbums(' + id + ')');
             $('#playlist-header').empty();
             $('#playlist-header').append(items);
 
@@ -88,6 +153,8 @@ function showCollection(id) {
             });
             $('#playlist-table-body').empty();
             $('#playlist-table-body').append(items);
+
+            loaded();
        });
 }
 
@@ -96,7 +163,7 @@ function showCollection(id) {
  */
 function setNameAndTitle(name, title) {
     $('#title-bar-name').html(name);
-    $('#title-bar-title').html('<a class="a-album" href="#">' + title + '</a>');
+    $('#title-bar-title').html('<a id="toolbarlink" class="a-album" href="#">' + title + '</a>');
     if(title && title.length > 0) {
         $('#title-bar-separator').show();
     }
@@ -106,16 +173,26 @@ function setNameAndTitle(name, title) {
 }
 
 /**
+ * Sets the link for the top toolbar
+ */
+function setToolbarLink(call) {
+  $('#toolbarlink').attr('onclick', call);
+}
+
+/**
  * The on-click mouse handler for a row
  */
 function playTrack(id) {
+    selectTrack(id);
+    play(id);
+}
+function selectTrack(id) {
     var tableRows =  $('#row-track-' + id).parent().children();
     for(var i=0; i<tableRows.length; i++) {
         var rowId = tableRows[i].attributes.id.value;
         $('#'+rowId).removeClass('row-selected');
     }
     $('#row-track-' + id).addClass('row-selected');
-    play(id);
 }
 
 /**

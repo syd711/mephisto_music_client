@@ -165,8 +165,8 @@ a img.collection-thumbnail:hover {
   display: none;
 }
 div.progressbar {
-    border: 1px solid #ccc;
-    background-color: white;
+    border: 0px solid #ccc;
+    /*background-color: #ccc;*/
     height: 3px;
     margin-top: -5px;
     margin-left: 38px;
@@ -178,9 +178,27 @@ div.progress {
     /*width:50%;  Fortschritt */
 }
 
+.ui-btn-text, input.ui-input-text {
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-size: 16px;
+}
+
+.ui-btn-corner-all {
+    -webkit-border-radius: 0em;
+    border-radius: 0em;
+}
+
+.ui-controlgroup-controls {
+    width:100%;
+}
+
+
 /**
  * Player
  */
 .player-icon {
-     opacity: 0.7;
+    opacity: 0.7;
+}
+.player-action {
+    cursor:pointer;
 }

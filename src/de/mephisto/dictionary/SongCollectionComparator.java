@@ -8,10 +8,8 @@ import java.util.Comparator;
  * Supports different sort directions for Albums.
  */
 public class SongCollectionComparator implements Comparator<Playlist> {
-  private int sortType;
 
-  public SongCollectionComparator(int sortType) {
-    this.sortType = sortType;
+  public SongCollectionComparator() {
   }
 
   @Override
