@@ -1,7 +1,8 @@
 package de.mephisto.model;
 
+import de.mephisto.Mephisto;
 import de.mephisto.service.IMusicProvider;
-import de.mephisto.service.MusicProviderFactory;
+import de.mephisto.service.ProviderManager;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -34,7 +35,7 @@ public class Song extends MModel implements Comparable<Song> {
 
   @JsonIgnore
   public IMusicProvider getProvider() {
-    return MusicProviderFactory.getProvider(getProviderId());
+    return Mephisto.getInstance().getProviderManager().getProvider(getProviderId());
   }
 
 

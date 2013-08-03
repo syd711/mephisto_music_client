@@ -37,6 +37,13 @@ function loadActivePlaylist(callback) {
 }
 
 /**
+ * Invoked for setting changes.
+ */
+function stopPlayer() {
+    refreshUI(null, false);
+}
+
+/**
  * The toolbar play action
  */
 function playPressed() {
@@ -94,7 +101,8 @@ function triggerProgressBar(millis) {
     intervalId = window.setInterval(function() {
        percentTotal+=1;
        $('#progress').attr('style', 'width:' + percentTotal + '%;');
-       if(percentTotal >= 100) {
+       var hidden = $('#progress').is(":hidden");
+       if(percentTotal >= 100 || hidden) {
             $('#progress').attr('style', 'width:0%;');
             window.clearInterval(intervalId);
             playNext();
@@ -123,7 +131,12 @@ function refreshUI(data, triggerProgress) {
         }
     }
     else {
-        $('#progressbar').show();
+        $('#progressbar').hide();
+        $('#player-cover').hide();
+        $('#player-cover').attr('src', '');
+        $('#player-title-label').html('');
+        $('#player-album-label').html('');
+        $('#progress').attr('style', 'width:0%;');
     }
 }
 

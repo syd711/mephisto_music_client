@@ -61,6 +61,14 @@ public interface IMusicProvider {
   boolean isEnabled();
 
   /**
+   * The may be enabled, but is not connected.
+   * @param b
+   */
+  void setConnected(boolean b);
+  boolean isConnected();
+
+
+  /**
    * Used to access the provider via REST
    * @return
    */

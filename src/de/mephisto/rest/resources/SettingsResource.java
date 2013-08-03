@@ -6,7 +6,7 @@ import de.mephisto.model.ProviderInfo;
 import de.mephisto.model.Settings;
 import de.mephisto.player.PlayerFactory;
 import de.mephisto.service.IMusicProvider;
-import de.mephisto.service.MusicProviderFactory;
+import de.mephisto.service.ProviderManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,7 @@ public class SettingsResource {
 
     Dictionary.getInstance().reset();
 
-    MusicProviderFactory.init();
+    Mephisto.getInstance().getProviderManager().init();
     return true;
   }
 
@@ -42,10 +42,10 @@ public class SettingsResource {
   @Path("providers/detect")
   public boolean detectProviders() {
     LOG.info("Checking for removable devices");
-    if(MusicProviderFactory.runDetectionCheck()) {
+    if(Mephisto.getInstance().getProviderManager().runDetectionCheck()) {
       Mephisto.getInstance().getPlayer().stop();
       Dictionary.getInstance().reset();
-      MusicProviderFactory.refresh();
+      Mephisto.getInstance().getProviderManager().refresh();
       return true;
     }
 
@@ -59,7 +59,7 @@ public class SettingsResource {
     settings.setAlbums(Dictionary.getInstance().getAlbums().size());
     settings.setSongs(Dictionary.getInstance().getSongs().size());
 
-    Collection<IMusicProvider> providers = MusicProviderFactory.getProviders();
+    Collection<IMusicProvider> providers = Mephisto.getInstance().getProviderManager().getProviders();
     for (IMusicProvider provider : providers) {
       ProviderInfo info = new ProviderInfo(provider);
       settings.getProviders().add(info);
@@ -73,11 +73,11 @@ public class SettingsResource {
     Mephisto.getInstance().getPlayer().stop();
     Dictionary.getInstance().reset();
 
-    IMusicProvider provider = MusicProviderFactory.getProvider(providerId);
+    IMusicProvider provider = Mephisto.getInstance().getProviderManager().getProvider(providerId);
     LOG.info("Settings " + provider + " to " + enable);
     provider.setEnabled(enable);
 
-    MusicProviderFactory.refresh();
+    Mephisto.getInstance().getProviderManager().refresh();
     return true;
   }
 }

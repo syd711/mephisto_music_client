@@ -3,7 +3,7 @@ package de.mephisto;
 import de.mephisto.http.Server;
 import de.mephisto.player.IMusicPlayer;
 import de.mephisto.player.PlayerFactory;
-import de.mephisto.service.MusicProviderFactory;
+import de.mephisto.service.ProviderManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +18,7 @@ public class Mephisto {
   private static Mephisto instance;
 
   private IMusicPlayer player;
+  private ProviderManager providerManager;
 
   public static Mephisto getInstance() {
     return instance;
@@ -25,6 +26,10 @@ public class Mephisto {
 
   public IMusicPlayer getPlayer() {
     return player;
+  }
+
+  public ProviderManager getProviderManager() {
+    return providerManager;
   }
 
   public void setPlayer(IMusicPlayer player) {
@@ -48,7 +53,7 @@ public class Mephisto {
       player = PlayerFactory.createPlayer();
 
       LOG.info("Loading Music Providers");
-      MusicProviderFactory.init();
+      providerManager = new ProviderManager();
 
       LOG.info("Starting http server on: " + Server.resolveHttpUrl());
       Server.start();

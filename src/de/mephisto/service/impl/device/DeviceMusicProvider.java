@@ -146,4 +146,9 @@ public class DeviceMusicProvider extends AbstractMusicProvider {
 
     return song;
   }
+
+  @Override
+  public String toString() {
+    return "Disc Music Provider for folder " + getConfiguration().getString("device.folder");
+  }
 }

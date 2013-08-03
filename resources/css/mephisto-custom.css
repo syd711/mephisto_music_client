@@ -91,6 +91,13 @@ a:active {
     border-bottom:1px solid #aaa !important;
 }
 
+.empty-collections {
+    display: block;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-size: 22px;
+    color:#555;
+}
+
 a img.collection-thumbnail:hover {
      /*opacity:0.4;*/
      -webkit-transition: all 0.5s;

@@ -12,6 +12,7 @@ abstract public class AbstractMusicProvider implements IMusicProvider {
   private boolean enabled = true;
   private int internalId;
   private boolean removable;
+  private boolean connected;
 
   @Override
   public void setEnabled(boolean enabled) {
@@ -65,5 +66,13 @@ abstract public class AbstractMusicProvider implements IMusicProvider {
   @Override
   public void setRemovable(boolean removable) {
     this.removable = removable;
+  }
+
+  public boolean isConnected() {
+    return connected;
+  }
+
+  public void setConnected(boolean connected) {
+    this.connected = connected;
   }
 }

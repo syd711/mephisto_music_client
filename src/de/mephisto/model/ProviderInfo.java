@@ -8,11 +8,13 @@ import de.mephisto.service.IMusicProvider;
 public class ProviderInfo {
   private String name;
   private boolean enabled;
+  private boolean connected;
   private int id;
 
   public ProviderInfo(IMusicProvider provider) {
     this.name = provider.getProviderName();
     this.enabled = provider.isEnabled();
+    this.connected = provider.isConnected();
     this.id = provider.getInternalId();
   }
 
@@ -38,5 +40,13 @@ public class ProviderInfo {
 
   public void setId(int id) {
     this.id = id;
+  }
+
+  public boolean isConnected() {
+    return connected;
+  }
+
+  public void setConnected(boolean connected) {
+    this.connected = connected;
   }
 }

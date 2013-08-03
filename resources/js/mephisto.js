@@ -90,13 +90,19 @@ function showCollections(collectionsItems) {
         if(!url || url.length === 0) {
             url = 'img/cover.png';
         }
-        var html='<div class="collections-container hover">';
+        var html = '';
+        html='<div class="collections-container hover">';
         html+='<div><a href="#" onClick="showCollection(' + value.mid + ')"><img class="collection-thumbnail" with="150" height="150" alt="' + value.artist + '" src="' + url + '" /></a></div>';
         html+='<div class="collection-title"><a class="a-album" href="#" onclick="showCollection(' + value.mid + ')">' + value.name + '</a></div>';
         html+='<div class="collection-subtitle"><a href="#" class="a-album" onclick="artistAlbums(\'' + value.mid + '\')">' + artist + '</a></div>';
         html+='</div>';
         items.push(html);
     });
+
+    if(collectionsItems.length == 0) {
+        items.push('<div class="empty-collections">No albums found, please check the provider settings.</div>');
+    }
+
     $('#collection').empty();
     $('#collection').append(items);
     showCollectionView();

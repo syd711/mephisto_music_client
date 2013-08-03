@@ -1,9 +1,10 @@
 package de.mephisto.player;
 
+import de.mephisto.Mephisto;
 import de.mephisto.model.Song;
 import de.mephisto.model.Stream;
 import de.mephisto.service.IMusicProvider;
-import de.mephisto.service.MusicProviderFactory;
+import de.mephisto.service.ProviderManager;
 import de.mephisto.util.Config;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.net.telnet.TelnetClient;
@@ -57,7 +58,7 @@ public class MpdPlayer extends AbstractMusicPlayer {
     if(song != null) {
       LOG.info("Playback of: " + song);
       try {
-        IMusicProvider provider = MusicProviderFactory.getProvider(song.getProviderId());
+        IMusicProvider provider = Mephisto.getInstance().getProviderManager().getProvider(song.getProviderId());
         String url = provider.getUrl(song);
         String add = "mpc add " + url;
         String play = "mpc play";

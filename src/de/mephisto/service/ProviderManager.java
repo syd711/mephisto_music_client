@@ -11,21 +11,25 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MusicProviderFactory {
-  private final static Logger LOG = LoggerFactory.getLogger(MusicProviderFactory.class);
+public class ProviderManager {
+  private final static Logger LOG = LoggerFactory.getLogger(ProviderManager.class);
 
   private final static String PROVIDER_NAME = "provider.name";
   private final static String PROVIDER_CLASS = "provider.class";
   private final static String PROVIDER_ENABLED = "provider.enabled";
   private final static String PROVIDER_REMOVABLE = "provider.removable";
 
-  private static Map<Integer, IMusicProvider> providerMap = new HashMap<Integer, IMusicProvider>();
-  private static int providerIdCounter = 0;
+  private Map<Integer, IMusicProvider> providerMap = new HashMap<Integer, IMusicProvider>();
+  private int providerIdCounter = 0;
+
+  public ProviderManager() {
+    init();
+  }
 
   /**
    * Loads the available providers
    */
-  public static void init() {
+  public void init() {
     providerIdCounter = 0;
     providerMap.clear();
 
@@ -62,15 +66,18 @@ public class MusicProviderFactory {
     LOG.info("Finished initialization of music providers, loaded " + providerMap.size() + " provider(s)");
   }
 
-  private static void initProvider(IMusicProvider provider) {
-    if (provider.isEnabled() && provider.connect()) {
-      LOG.info("Connected " + provider);
-      LOG.info("Loading data for " + provider);
-      provider.loadMusic();
-    }
-    else {
-      provider.setEnabled(false);
-      LOG.info("Did not connect to " + provider);
+  private void initProvider(IMusicProvider provider) {
+    if(provider.isEnabled()) {
+      if (provider.connect()) {
+        provider.setConnected(true);
+        LOG.info("Connected " + provider);
+        LOG.info("Loading data for " + provider);
+        provider.loadMusic();
+      }
+      else {
+        provider.setConnected(false);
+        LOG.info("Did not connect to " + provider);
+      }
     }
   }
 
@@ -79,7 +86,7 @@ public class MusicProviderFactory {
    *
    * @return
    */
-  public static Collection<IMusicProvider> getProviders() {
+  public Collection<IMusicProvider> getProviders() {
     return providerMap.values();
   }
 
@@ -88,14 +95,14 @@ public class MusicProviderFactory {
    * @param internalId
    * @return
    */
-  public static IMusicProvider getProvider(int internalId) {
+  public IMusicProvider getProvider(int internalId) {
     return providerMap.get(internalId);
   }
 
   /**
    * Reloads the all enabled providers.
    */
-  public static void refresh() {
+  public void refresh() {
     for(IMusicProvider provider : providerMap.values()) {
       initProvider(provider);
     }
@@ -105,13 +112,19 @@ public class MusicProviderFactory {
    * Checks the disabled provider if they provide any data meanwhile.
    * @return
    */
-  public static boolean runDetectionCheck() {
+  public boolean runDetectionCheck() {
     boolean detected = false;
     for(IMusicProvider provider : providerMap.values()) {
-      if(!provider.isEnabled()) {
-        if(provider.connect()) {
+      if(provider.isRemovable() && provider.isEnabled()) {
+        if(!provider.isConnected() && provider.connect()) {
           detected = true;
         }
+        else if(provider.isConnected() && !provider.connect()) {
+          detected = true;
+        }
+      }
+      if(detected) {
+        LOG.info("Detected state change of provider " + provider);
       }
     }
     return detected;

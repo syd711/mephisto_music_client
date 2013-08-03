@@ -5,7 +5,10 @@ function initSettings() {
             var provider = data.providers[i];
             html+='<input onchange="enableProvider(\'' + provider.name + '\',' + provider.id + ')" type="checkbox" name="' + provider.name + '" id="provider-' + provider.id + '" class="custom" data-theme="c" ';
             if(provider.enabled) {
-                html+='checked';
+                html+=' checked';
+            }
+            if(!provider.connected) {
+                html+=' disabled';
             }
             html+='/>';
             html+='<label for="provider-' + provider.id + '">' + provider.name + '</label>';
@@ -26,14 +29,15 @@ function initSettings() {
  * Enables or disables a music provider.
  */
 function enableProvider(name, id) {
-   var enable = $('#provider-' + id).is(':checked');
-   if(enable) {
-    loading('Enabling Music Provider "' + name + '"');
-   }
-   else {
-    loading('Disabling Music Provider "' + name + '"');
-   }
-   $.getJSON('/rest/settings/provider/' + id + '/enable/' + enable, function(data) {
+    stopPlayer();
+    var enable = $('#provider-' + id).is(':checked');
+    if(enable) {
+        loading('Enabling Music Provider "' + name + '"');
+    }
+    else {
+        loading('Disabling Music Provider "' + name + '"');
+    }
+    $.getJSON('/rest/settings/provider/' + id + '/enable/' + enable, function(data) {
        initSettings();
        loaded();
        albums();
@@ -45,8 +49,10 @@ function enableProvider(name, id) {
  */
 function reloadProviders() {
     loading('Reloading Music Library');
+    stopPlayer();
     $.getJSON('/rest/settings/providers/reload', function(data) {
         loaded();
+        initSettings();
         albums();
     });
 }
@@ -58,6 +64,11 @@ function detectProviders() {
     loading('Checking Removable Devices');
     $.getJSON('/rest/settings/providers/detect', function(data) {
         loaded();
+        initSettings();
+        if(data) {
+            stopPlayer();
+            albums();
+        }
     });
 }
 
