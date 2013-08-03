@@ -3,6 +3,7 @@ package de.mephisto.rest.resources;
 import de.mephisto.Mephisto;
 import de.mephisto.dictionary.Dictionary;
 import de.mephisto.model.Playlist;
+import de.mephisto.model.Song;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,6 +29,15 @@ public class PlayerResource {
   public Playlist play(@PathParam("id") int id) {
     Playlist collection = Dictionary.getInstance().getPlaylist(id);
     Mephisto.getInstance().getPlayer().play(collection);
+    return collection;
+  }
+
+  @GET
+  @Path("playsong/{collectionId}/{id}")
+  public Playlist playSong(@PathParam("collectionId") int collectionId, @PathParam("id") int id) {
+    Playlist collection = Dictionary.getInstance().getPlaylist(collectionId);
+    Song song = collection.getSong(id);
+    Mephisto.getInstance().getPlayer().play(collection, song);
     return collection;
   }
 

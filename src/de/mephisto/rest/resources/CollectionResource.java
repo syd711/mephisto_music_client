@@ -53,6 +53,7 @@ public class CollectionResource {
 
   @GET
   @Path("search")
+  @JsonView({JSONViews.AlbumsView.class})
   public PlaylistCollection search(@QueryParam("term") String term) {
     PlaylistCollection collection = new PlaylistCollection();
     collection.setItems(Dictionary.getInstance().search(term));

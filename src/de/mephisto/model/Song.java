@@ -1,5 +1,7 @@
 package de.mephisto.model;
 
+import de.mephisto.service.IMusicProvider;
+import de.mephisto.service.MusicProviderFactory;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -19,12 +21,20 @@ public class Song extends MModel implements Comparable<Song> {
   private int track;
   private String composer;
 
-  private String providerId;
+  private int providerId;
   @JsonIgnore
   private Object originalModel;
 
-  public Song(String providerId) {
+  @JsonIgnore
+  private byte[] artwork;
+
+  public Song(int providerId) {
     this.providerId = providerId;
+  }
+
+  @JsonIgnore
+  public IMusicProvider getProvider() {
+    return MusicProviderFactory.getProvider(getProviderId());
   }
 
 
@@ -113,11 +123,11 @@ public class Song extends MModel implements Comparable<Song> {
     this.originalModel = originalModel;
   }
 
-  public String getProviderId() {
+  public int getProviderId() {
     return providerId;
   }
 
-  public void setProviderId(String providerId) {
+  public void setProviderId(int providerId) {
     this.providerId = providerId;
   }
 
@@ -147,5 +157,13 @@ public class Song extends MModel implements Comparable<Song> {
   @Override
   public int compareTo(Song o) {
     return track-o.getTrack();
+  }
+
+  public byte[] getArtwork() {
+    return artwork;
+  }
+
+  public void setArtwork(byte[] artwork) {
+    this.artwork = artwork;
   }
 }

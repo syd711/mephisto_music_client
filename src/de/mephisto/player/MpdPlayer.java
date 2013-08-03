@@ -53,7 +53,7 @@ public class MpdPlayer extends AbstractMusicPlayer {
   }
 
   @Override
-  public void play(Song song) {
+  public Song play(Song song) {
     if(song != null) {
       LOG.info("Playback of: " + song);
       try {
@@ -70,6 +70,7 @@ public class MpdPlayer extends AbstractMusicPlayer {
     else {
       LOG.info("Reached end of " + getActivePlaylist());
     }
+    return song;
   }
 
   @Override
@@ -80,6 +81,11 @@ public class MpdPlayer extends AbstractMusicPlayer {
   @Override
   public int getVolume() {
     return 0;  //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void stop() {
+    //To change body of implemented methods use File | Settings | File Templates.
   }
 
   @Override

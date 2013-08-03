@@ -40,20 +40,24 @@ function loadActivePlaylist(callback) {
  * The toolbar play action
  */
 function playPressed() {
-    var id = 0;
-    var midEl = $('#collection-mid');
-    if(midEl) {
-        id = midEl.attr('data-mid');
-    }
-    play(id);
+    var id = getCollectionId();
+    playCollection();
 }
 
 
 /**
  * The playlist play action
  */
-function play(id) {
-    $.getJSON('/rest/player/play/' + id, function(data) {
+function playCollection() {
+    var collectionId = getCollectionId();
+    $.getJSON('/rest/player/play/' + collectionId, function(data) {
+        refreshUI(data, true);
+    });
+}
+
+function playSong(id) {
+    var collectionId = getCollectionId();
+    $.getJSON('/rest/player/playsong/' + collectionId + '/' + id, function(data) {
         refreshUI(data, true);
     });
 }

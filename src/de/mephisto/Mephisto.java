@@ -27,6 +27,10 @@ public class Mephisto {
     return player;
   }
 
+  public void setPlayer(IMusicPlayer player) {
+    this.player = player;
+  }
+
   private Mephisto() {
     //force private singleton
   }
@@ -40,11 +44,11 @@ public class Mephisto {
     try {
       LOG.info("Mephisto is starting");
 
-      LOG.info("Loading Music Providers");
-      MusicProviderFactory.init();
-
       LOG.info("Loading Player");
       player = PlayerFactory.createPlayer();
+
+      LOG.info("Loading Music Providers");
+      MusicProviderFactory.init();
 
       LOG.info("Starting http server on: " + Server.resolveHttpUrl());
       Server.start();

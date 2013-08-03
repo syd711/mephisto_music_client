@@ -13,3 +13,12 @@ function loading(msg) {
 function loaded() {
     $.mobile.loading("hide");
 }
+
+function getCollectionId() {
+    var id = 0;
+    var midEl = $('#collection-mid');
+    if(midEl) {
+        id = midEl.attr('data-mid');
+    }
+    return id;
+}

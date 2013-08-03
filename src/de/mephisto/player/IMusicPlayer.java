@@ -4,6 +4,8 @@ import de.mephisto.model.Playlist;
 import de.mephisto.model.Song;
 import de.mephisto.model.Stream;
 
+import java.io.File;
+
 /**
  * This interface has to be implement to delegate the playback to the corresponding player.
  */
@@ -19,7 +21,12 @@ public interface IMusicPlayer {
   /**
    * Playback of a single song
    */
-  public void play(Song song);
+  public Song play(Song song);
+
+  /**
+   * Playback of a single song
+   */
+  public Song play(Playlist playlist, Song song);
 
   /**
    * Pause current playback
@@ -67,4 +74,14 @@ public interface IMusicPlayer {
    * @param stream
    */
   public void playStream(Stream stream);
+
+  /**
+   * Stops the player, used for reloading all data.
+   */
+  public void stop();
+
+  /**
+   * Returns true if the given file can be played
+   */
+  public boolean isPlayable(File f);
 }

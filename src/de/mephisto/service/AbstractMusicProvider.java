@@ -8,7 +8,20 @@ import org.apache.commons.configuration.Configuration;
  */
 abstract public class AbstractMusicProvider implements IMusicProvider {
   private Configuration configuration;
-  private String providerId;
+  private String providerName;
+  private boolean enabled = true;
+  private int internalId;
+  private boolean removable;
+
+  @Override
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return enabled;
+  }
 
   @Override
   public void setConfiguration(Configuration configuration) {
@@ -16,13 +29,13 @@ abstract public class AbstractMusicProvider implements IMusicProvider {
   }
 
   @Override
-  public String getProviderId() {
-    return providerId;
+  public String getProviderName() {
+    return providerName;
   }
 
   @Override
-  public void setProviderId(String providerId) {
-    this.providerId = providerId;
+  public void setProviderName(String name) {
+    this.providerName = name;
   }
 
   protected Configuration getConfiguration() {
@@ -31,6 +44,26 @@ abstract public class AbstractMusicProvider implements IMusicProvider {
 
   @Override
   public String toString() {
-    return "Music Provider '" + getProviderId() + "'";
+    return "Music Provider '" + getProviderName() + "'";
+  }
+
+  @Override
+  public int getInternalId() {
+    return internalId;
+  }
+
+  @Override
+  public void setInternalId(int internalId) {
+    this.internalId = internalId;
+  }
+
+  @Override
+  public boolean isRemovable() {
+    return removable;
+  }
+
+  @Override
+  public void setRemovable(boolean removable) {
+    this.removable = removable;
   }
 }

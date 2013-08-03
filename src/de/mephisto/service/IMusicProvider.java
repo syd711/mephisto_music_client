@@ -27,7 +27,7 @@ public interface IMusicProvider {
    *
    * @return
    */
-  String getProviderId();
+  String getProviderName();
 
   /**
    * The provider may have to provide an url for the playback.
@@ -40,9 +40,9 @@ public interface IMusicProvider {
   /**
    * Sets the name of the provider.
    *
-   * @param providerId
+   * @param name
    */
-  void setProviderId(String providerId);
+  void setProviderName(String name);
 
 
   /**
@@ -52,4 +52,25 @@ public interface IMusicProvider {
    * @param configuration
    */
   void setConfiguration(Configuration configuration);
+
+  /**
+   * Status update
+   * @param enabled
+   */
+  void setEnabled(boolean enabled);
+  boolean isEnabled();
+
+  /**
+   * Used to access the provider via REST
+   * @return
+   */
+  int getInternalId();
+  void setInternalId(int id);
+
+  /**
+   * Returns true if the provider is working on a removable device.
+   * @return
+   */
+  boolean isRemovable();
+  void setRemovable(boolean b);
 }

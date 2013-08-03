@@ -20,7 +20,7 @@ public class PlayerTest {
     @Test
     public void testPlayback() {
         GoogleMusicProvider provider = new GoogleMusicProvider();
-        provider.setProviderId("google");
+        provider.setProviderName("google");
         provider.setConfiguration(Config.getProviderConfiguration("google.properties"));
         provider.connect();
         provider.loadMusic();

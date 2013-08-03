@@ -134,4 +134,13 @@ public class Playlist extends MModel {
   public Song getActiveSong() {
     return activeSong;
   }
+
+  public Song getSong(int id) {
+    for(Song song : songs) {
+      if(song.getMID() == id) {
+        return song;
+      }
+    }
+    return null;
+  }
 }

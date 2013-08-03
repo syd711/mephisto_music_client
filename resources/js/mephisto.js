@@ -10,6 +10,7 @@ function initSite() {
     hidePlaylistView();
     initPlayer();
     initSearch();
+    initSettings();
 }
 
 function initSearch() {
@@ -141,7 +142,7 @@ function showCollection(id) {
             $.each(value.songs, function(key, song) {
                 var track = song.track;
                 if(song.track == 0) {
-                    track = '-';
+                    track = '';
                 }
                 var html='<tr id="row-track-' + song.mid + '" class="row" onclick="playTrack(' + song.mid + ')" onmouseover="showPlay(' + song.mid+ ')" onmouseout="hidePlay(' + song.mid + ',' + track +')">';
                 html+='<td class="tracklist-column track" id="column-track-' + song.mid + '">' + track + '</td>';
@@ -184,7 +185,7 @@ function setToolbarLink(call) {
  */
 function playTrack(id) {
     selectTrack(id);
-    play(id);
+    playSong(id);
 }
 function selectTrack(id) {
     var tableRows =  $('#row-track-' + id).parent().children();
@@ -199,7 +200,7 @@ function selectTrack(id) {
  * The on mouse over effect for the playback table.
  */
 function showPlay(id) {
-    $('#column-track-' + id).html('<img src="img/play.png" alt="" border="" />');
+    $('#column-track-' + id).html('<span class="play-icon"/>');
 }
 
 /**

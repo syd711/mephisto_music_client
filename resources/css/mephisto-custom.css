@@ -29,7 +29,7 @@ a:active {
  * Global layout
  */
 .title-bar {
-    height:48px;
+    height:52px;
     background-color:#fff;
     font-family: 'Yanone Kaffeesatz', sans-serif;
     color:#aaa;
@@ -124,7 +124,7 @@ a img.collection-thumbnail:hover {
  }
 
  td, th {
-    height:40px;
+    height:48px;
     text-align:left;
     font-family: 'Yanone Kaffeesatz', sans-serif;
     color:#353535;
@@ -155,6 +155,22 @@ a img.collection-thumbnail:hover {
     background-color: #444;
 }
 
+.play-icon {
+    background-image: url('../img/play.png');
+    height: 32px;
+    width: 32px;
+    display:block;
+    margin-left:10px;
+}
+
+.playing-icon {
+    background-image: url('../img/equalizer.gif');
+    height: 32px;
+    width: 32px;
+    display:block;
+    margin-left:10px;
+}
+
 /**
  * jQuery Theme Overwriting
  */
@@ -180,7 +196,8 @@ div.progress {
 
 .ui-btn-text, input.ui-input-text {
     font-family: 'Yanone Kaffeesatz', sans-serif;
-    font-size: 16px;
+    font-size: 18px;
+    font-weight: normal;
 }
 
 .ui-btn-corner-all {
@@ -199,6 +216,30 @@ div.progress {
 .player-icon {
     opacity: 0.7;
 }
+.volume-icon {
+    opacity: 0.7;
+}
+.player-icon:hover {
+    background-color:#ccc;
+}
+
 .player-action {
     cursor:pointer;
+}
+
+/**
+ * Settings
+ */
+.settings-label {
+    margin-top: 30px;
+    display: block;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-size: 22px;
+    font-weight:bold;
+}
+
+.settings-value {
+    display: block;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-size: 18px;
 }

@@ -88,7 +88,7 @@ public class GoogleMusicProvider extends AbstractMusicProvider {
    * @return The converted song.
    */
   private de.mephisto.model.Song songFor(Song song) {
-    de.mephisto.model.Song mSong = new de.mephisto.model.Song(getProviderId());
+    de.mephisto.model.Song mSong = new de.mephisto.model.Song(getInternalId());
     mSong.setOriginalModel(song);
 
     mSong.setId(song.getId());

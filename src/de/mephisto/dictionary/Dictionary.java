@@ -36,6 +36,15 @@ public class Dictionary {
     return songs.values();
   }
 
+  public Song getSong(int mid) {
+    return (Song)globalDict.get(mid);
+  }
+
+  public void reset() {
+    instance = new Dictionary();
+    LOG.info("Music dictionary has been cleared.");
+  }
+
 
   /**
    * Looks up the collection for the given id, might be an album or a genre, ...
@@ -125,7 +134,7 @@ public class Dictionary {
    *
    * @param song The song to add to the album.
    */
-  private void addToAlbum(Song song) {
+  public void addToAlbum(Song song) {
     if (!StringUtils.isEmpty(song.getAlbum())) {
       //create the regular dict entry and add song to album
       Album album = getAlbum(song);
@@ -210,16 +219,16 @@ public class Dictionary {
       Album playlist = (Album)album;
       if(playlist.getName().toLowerCase().contains(term.toLowerCase())) {
         lists.add(playlist);
-        break;
+        continue;
       }
       if(playlist.getArtist().toLowerCase().contains(term.toLowerCase())) {
         lists.add(playlist);
-        break;
+        continue;
       }
       for(Song song : playlist.getSongs()) {
         if(song.getName().toLowerCase().contains(term.toLowerCase())) {
           lists.add(playlist);
-          break;
+          continue;
         }
       }
     }

@@ -1,5 +1,6 @@
 package de.mephisto.player;
 
+import de.mephisto.model.Playlist;
 import de.mephisto.model.Song;
 import de.mephisto.model.Stream;
 import de.mephisto.service.IMusicProvider;
@@ -18,17 +19,18 @@ public class WindowsPlayer extends AbstractMusicPlayer {
   private final static Logger LOG = LoggerFactory.getLogger(MpdPlayer.class);
 
   @Override
-  public void play(Song song) {
-    try {
-      IMusicProvider provider = MusicProviderFactory.getProvider(song.getProviderId());
-      String url = provider.getUrl(song);
-      String line = "\"c:\\Program Files\\Winamp\\winamp.exe\" " + url;
-      CommandLine cmdLine = CommandLine.parse(line);
-      DefaultExecutor executor = new DefaultExecutor();
-      executor.execute(cmdLine);
-    } catch (IOException e) {
-      LOG.error("Error executing system command for win player: " + e.getMessage());
-    }
+  public Song play(Song song) {
+//    try {
+//      IMusicProvider provider = MusicProviderFactory.getProvider(song.getProviderName());
+//      String url = provider.getUrl(song);
+//      String line = "\"c:\\Program Files\\Winamp\\winamp.exe\" " + url;
+//      CommandLine cmdLine = CommandLine.parse(line);
+//      DefaultExecutor executor = new DefaultExecutor();
+//      executor.execute(cmdLine);
+//    } catch (IOException e) {
+//      LOG.error("Error executing system command for win player: " + e.getMessage());
+//    }
+    return song;
   }
 
   @Override
@@ -38,6 +40,11 @@ public class WindowsPlayer extends AbstractMusicPlayer {
 
   @Override
   public void setVolume(int volume) {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void stop() {
     //To change body of implemented methods use File | Settings | File Templates.
   }
 

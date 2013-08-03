@@ -14,16 +14,21 @@ import java.util.Map;
 public class MusicProviderFactory {
   private final static Logger LOG = LoggerFactory.getLogger(MusicProviderFactory.class);
 
-  private final static String PROVIDER_ID = "provider.id";
+  private final static String PROVIDER_NAME = "provider.name";
   private final static String PROVIDER_CLASS = "provider.class";
   private final static String PROVIDER_ENABLED = "provider.enabled";
+  private final static String PROVIDER_REMOVABLE = "provider.removable";
 
-  private static Map<String, IMusicProvider> providerMap = new HashMap<String, IMusicProvider>();
+  private static Map<Integer, IMusicProvider> providerMap = new HashMap<Integer, IMusicProvider>();
+  private static int providerIdCounter = 0;
 
   /**
    * Loads the available providers
    */
   public static void init() {
+    providerIdCounter = 0;
+    providerMap.clear();
+
     File configFolder = new File(Config.CONFIG_FOLDER + Config.PROVIDER_CONFIG_FOLDER);
     File[] providerConfigs = configFolder.listFiles(new FilenameFilter() {
       @Override
@@ -40,19 +45,14 @@ public class MusicProviderFactory {
           Class clazz = Class.forName(className);
           IMusicProvider provider = (IMusicProvider) clazz.newInstance();
           provider.setConfiguration(config);
-          provider.setProviderId(config.getString(PROVIDER_ID));
+          provider.setProviderName(config.getString(PROVIDER_NAME));
+          provider.setInternalId(providerIdCounter);
+          provider.setRemovable(config.getBoolean(PROVIDER_REMOVABLE, false));
+          providerMap.put(providerIdCounter, provider);
+          providerIdCounter++;
+
           LOG.info("Loaded " + provider);
-
-          if (provider.connect()) {
-            LOG.info("Connected " + provider);
-            providerMap.put(provider.getProviderId(), provider);
-
-            LOG.info("Loading data for " + provider);
-            provider.loadMusic();
-          }
-          else {
-            LOG.error("Failed to connect to " + provider);
-          }
+          initProvider(provider);
 
         } catch (Exception e) {
           LOG.error("Could not load provider class " + className + ": " + e.getMessage(), e);
@@ -60,6 +60,18 @@ public class MusicProviderFactory {
       }
     }
     LOG.info("Finished initialization of music providers, loaded " + providerMap.size() + " provider(s)");
+  }
+
+  private static void initProvider(IMusicProvider provider) {
+    if (provider.isEnabled() && provider.connect()) {
+      LOG.info("Connected " + provider);
+      LOG.info("Loading data for " + provider);
+      provider.loadMusic();
+    }
+    else {
+      provider.setEnabled(false);
+      LOG.info("Did not connect to " + provider);
+    }
   }
 
   /**
@@ -73,10 +85,35 @@ public class MusicProviderFactory {
 
   /**
    * Returns the music provider with the given id.
-   * @param providerId
+   * @param internalId
    * @return
    */
-  public static IMusicProvider getProvider(String providerId) {
-    return providerMap.get(providerId);
+  public static IMusicProvider getProvider(int internalId) {
+    return providerMap.get(internalId);
+  }
+
+  /**
+   * Reloads the all enabled providers.
+   */
+  public static void refresh() {
+    for(IMusicProvider provider : providerMap.values()) {
+      initProvider(provider);
+    }
+  }
+
+  /**
+   * Checks the disabled provider if they provide any data meanwhile.
+   * @return
+   */
+  public static boolean runDetectionCheck() {
+    boolean detected = false;
+    for(IMusicProvider provider : providerMap.values()) {
+      if(!provider.isEnabled()) {
+        if(provider.connect()) {
+          detected = true;
+        }
+      }
+    }
+    return detected;
   }
 }
