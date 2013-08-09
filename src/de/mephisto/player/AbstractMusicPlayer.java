@@ -13,8 +13,15 @@ abstract public class AbstractMusicPlayer implements IMusicPlayer {
 
   @Override
   public Playlist play(Playlist playlist) {
-    this.activePlaylist = playlist;
-    return next();
+    if(playlist == activePlaylist) {
+      play(playlist, playlist.getActiveSong());
+      return activePlaylist;
+    }
+    else {
+      this.activePlaylist = playlist;
+      return next();
+    }
+
   }
 
   @Override
@@ -31,19 +38,13 @@ abstract public class AbstractMusicPlayer implements IMusicPlayer {
 
   @Override
   public Playlist next() {
-    Song song = activePlaylist.nextSong();
-    if(song != null && song.getProvider().isEnabled()) {
-      play(activePlaylist, song);
-    }
+    activePlaylist.nextSong();
     return activePlaylist;
   }
 
   @Override
   public Playlist previous() {
-    Song song = activePlaylist.previousSong();
-    if(song != null && song.getProvider().isEnabled()) {
-      play(activePlaylist, song);
-    }
+    activePlaylist.previousSong();
     return activePlaylist;
   }
 

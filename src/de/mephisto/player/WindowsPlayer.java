@@ -27,18 +27,18 @@ public class WindowsPlayer extends AbstractMusicPlayer {
   }
 
   @Override
-  public void playStream(Stream stream) {
-    //To change body of implemented methods use File | Settings | File Templates.
+  public boolean playStream(Stream stream) {
+    return true;
   }
 
   @Override
-  public void setVolume(int volume) {
-    //To change body of implemented methods use File | Settings | File Templates.
+  public boolean setVolume(int volume) {
+    return true;
   }
 
   @Override
-  public void stop() {
-    //To change body of implemented methods use File | Settings | File Templates.
+  public boolean stop() {
+    return true;
   }
 
   @Override

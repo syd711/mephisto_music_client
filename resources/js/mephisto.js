@@ -34,7 +34,7 @@ function initSearch() {
  */
 function albums() {
     hidePlaylistView();
-    showCollectionView();
+    hideCollectionView();
     setNameAndTitle('Albums', '');
     loading('Loading Albums');
     $.getJSON('/rest/collections/albums', function(data) {
@@ -111,7 +111,7 @@ function showCollections(collectionsItems) {
 /**
  * Creates the list view for a song collection.
  */
-function showCollection(id) {
+function showCollection(id, callback) {
     hideCollectionView();
     showPlaylistView();
     loading('Loading Album');
@@ -150,8 +150,12 @@ function showCollection(id) {
                 if(song.track == 0) {
                     track = '';
                 }
-                var html='<tr id="row-track-' + song.mid + '" class="row" onclick="playTrack(' + song.mid + ')" onmouseover="showPlay(' + song.mid+ ')" onmouseout="hidePlay(' + song.mid + ',' + track +')">';
-                html+='<td class="tracklist-column track" id="column-track-' + song.mid + '">' + track + '</td>';
+                var html='<tr id="row-track-' + song.mid + '" class="row';
+                if(song.mid == getActiveTrackId()) {
+                    html+=' row-selected';
+                }
+                html+='" onclick="playTrack(' + song.mid + ')" onmouseover="showPlay(' + song.mid+ ')" onmouseout="hidePlay(' + song.mid + ',' + track +')">';
+                html+='<td class="tracklist-column track" id="column-track-' + song.mid + '" data-track="' + track + '">' + track + '</td>';
                 html+='<td class="tracklist-column">' + song.name + '</td>';
                 html+='<td class="tracklist-column">' + song.artist + '</td>';
                 html+='<td class="tracklist-column">' + song.duration + '</td>';
@@ -160,8 +164,22 @@ function showCollection(id) {
             });
             $('#playlist-table-body').empty();
             $('#playlist-table-body').append(items);
-
             loaded();
+
+            if(getActiveTrackId() > 0) {
+                var activeTrack = getActiveTrackId();
+                if(paused) {
+                    $('#column-track-' + activeTrack).html('<span class="paused-icon"/>');
+                }
+                else {
+                    $('#column-track-' + activeTrack).html('<span class="playing-icon"/>');
+                }
+
+            }
+
+            if(callback) {
+               callback();
+            }
        });
 }
 
@@ -191,46 +209,65 @@ function setToolbarLink(call) {
  */
 function playTrack(id) {
     selectTrack(id);
+    var collectionId = getCollectionId();
+    setActiveCollectionId(collectionId);
     playSong(id);
 }
+
 function selectTrack(id) {
-    var tableRows =  $('#row-track-' + id).parent().children();
+    var track = $('#column-track-' + getActiveTrackId()).attr('data-track');
+    $('#column-track-' + getActiveTrackId()).html(track);
+
+    var tableRows =  $('#row-track-' + getActiveTrackId()).parent().children();
+    if(id != -1) {
+        tableRows =  $('#row-track-' + id).parent().children();
+    }
+
     for(var i=0; i<tableRows.length; i++) {
         var rowId = tableRows[i].attributes.id.value;
         $('#'+rowId).removeClass('row-selected');
     }
-    $('#row-track-' + id).addClass('row-selected');
+    if(id != -1) {
+        setActiveTrackId(id);
+        $('#row-track-' + id).addClass('row-selected');
+        $('#column-track-' + id).empty();
+        $('#column-track-' + id).html('<span class="loading-icon"/>');
+    }
 }
 
 /**
  * The on mouse over effect for the playback table.
  */
 function showPlay(id) {
-    $('#column-track-' + id).html('<span class="play-icon"/>');
+    if(id != getActiveTrackId()) {
+        $('#column-track-' + id).html('<span class="play-icon"/>');
+    }
 }
 
 /**
  * The mouse leave event for the playback table.
  */
 function hidePlay(id, track) {
-    $('#column-track-' + id).html(track);
+    if(id != getActiveTrackId()) {
+        $('#column-track-' + id).html(track);
+    }
 }
 
 /**
  * Hides generated elements
  */
 function hideCollectionView() {
-    $('#collection').hide();
+    $('#collection').fadeOut();
 }
 
 function showCollectionView() {
-    $('#collection').show();
+    $('#collection').fadeIn();
 }
 
 function hidePlaylistView() {
-    $('#playlist').hide();
+    $('#playlist').fadeOut();
 }
 
 function showPlaylistView() {
-    $('#playlist').show();
+    $('#playlist').fadeIn();
 }

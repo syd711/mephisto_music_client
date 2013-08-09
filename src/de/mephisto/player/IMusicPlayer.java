@@ -43,7 +43,7 @@ public interface IMusicPlayer {
    * @param volume
    * @return
    */
-  public void setVolume(int volume);
+  public boolean setVolume(int volume);
 
   /**
    * Returns the current volume of the player.
@@ -73,12 +73,12 @@ public interface IMusicPlayer {
    * Playback of the given stream
    * @param stream
    */
-  public void playStream(Stream stream);
+  public boolean playStream(Stream stream);
 
   /**
    * Stops the player, used for reloading all data.
    */
-  public void stop();
+  public boolean stop();
 
   /**
    * Returns true if the given file can be played

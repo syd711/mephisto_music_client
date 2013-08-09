@@ -172,10 +172,29 @@ a img.collection-thumbnail:hover {
 
 .playing-icon {
     background-image: url('../img/equalizer.gif');
+    height: 48px;
+    width: 30px;
+    display: block;
+    margin-left: 8px;
+    margin-top: -23px;
+}
+
+.loading-icon {
+    background-image: url('../img/ring.gif');
+    height: 31px;
+    width: 31px;
+    display: block;
+    margin-left: 8px;
+    margin-top: 0px;
+}
+
+.paused-icon {
+    background-image: url('../img/paused.gif');
     height: 32px;
     width: 32px;
-    display:block;
-    margin-left:10px;
+    display: block;
+    margin-left: 8px;
+    margin-top: 0px;
 }
 
 /**

@@ -1,12 +1,12 @@
 package de.mephisto.test;
 
+import de.mephisto.Mephisto;
 import de.mephisto.dictionary.Dictionary;
-import de.mephisto.model.Song;
-import de.mephisto.player.IMusicPlayer;
+import de.mephisto.model.Playlist;
 import de.mephisto.player.MpdPlayer;
-import de.mephisto.service.impl.google.GoogleMusicProvider;
-import de.mephisto.util.Config;
 import org.junit.Test;
+
+import java.util.Iterator;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,17 +17,16 @@ import org.junit.Test;
  */
 public class PlayerTest {
 
-    @Test
-    public void testPlayback() {
-        GoogleMusicProvider provider = new GoogleMusicProvider();
-        provider.setProviderName("google");
-        provider.setConfiguration(Config.getProviderConfiguration("google.properties"));
-        provider.connect();
-        provider.loadMusic();
+  @Test
+  public void testPlayback() throws InterruptedException {
+    Mephisto.getInstance();
+    Iterator<Playlist> iterator = Dictionary.getInstance().getAlbums().iterator();
+    iterator.next();
+    iterator.next();
+    Playlist p = iterator.next();
 
-        Song song = Dictionary.getInstance().getSongs().iterator().next();
-
-        IMusicPlayer player = new MpdPlayer();
-//        provider.playSong(player, song);
-    }
+    MpdPlayer player = new MpdPlayer();
+    Mephisto.getInstance().setPlayer(player);
+    player.play(p);
+  }
 }

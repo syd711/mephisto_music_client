@@ -21,6 +21,10 @@ public class Mephisto {
   private ProviderManager providerManager;
 
   public static Mephisto getInstance() {
+    if(instance == null) {
+      instance = new Mephisto();
+      instance.initServices();
+    }
     return instance;
   }
 
@@ -54,9 +58,6 @@ public class Mephisto {
 
       LOG.info("Loading Music Providers");
       providerManager = new ProviderManager();
-
-      LOG.info("Starting http server on: " + Server.resolveHttpUrl());
-      Server.start();
     }
     catch (Exception e) {
       LOG.info("Error starting Mephisto: " + e.getMessage(), e);
@@ -70,9 +71,11 @@ public class Mephisto {
    *
    * @param args
    */
-  public static void main(String[] args) {
-    instance = new Mephisto();
-    instance.initServices();
+  public static void main(String[] args) throws IOException {
+    Mephisto.getInstance();
+
+    LOG.info("Starting http server on: " + Server.resolveHttpUrl());
+    Server.start();
   }
 
 }
