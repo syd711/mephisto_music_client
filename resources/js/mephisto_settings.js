@@ -37,10 +37,12 @@ function enableProvider(name, id) {
     else {
         loading('Disabling Music Provider "' + name + '"');
     }
+    enableControls(false);
     $.getJSON('/rest/settings/provider/' + id + '/enable/' + enable, function(data) {
-       initSettings();
-       loaded();
-       albums();
+        enableControls(true);
+        initSettings();
+        loaded();
+        albums();
    });
 }
 
@@ -50,7 +52,10 @@ function enableProvider(name, id) {
 function reloadProviders() {
     loading('Reloading Music Library');
     stopPlayer();
+    enableControls(false);
+    setNameAndTitle('Reloading Music Library...', '');
     $.getJSON('/rest/settings/providers/reload', function(data) {
+        enableControls(true);
         loaded();
         initSettings();
         albums();
@@ -66,7 +71,8 @@ function detectProviders() {
         loaded();
         initSettings();
         if(data) {
-            stopPlayer();
+            enableControls(false);
+            enableControls(true);
             albums();
         }
     });

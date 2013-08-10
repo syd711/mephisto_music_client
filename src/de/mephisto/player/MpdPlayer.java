@@ -4,10 +4,8 @@ import de.mephisto.Mephisto;
 import de.mephisto.model.Song;
 import de.mephisto.model.Stream;
 import de.mephisto.service.IMusicProvider;
-import de.mephisto.service.ProviderManager;
 import de.mephisto.util.Config;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.net.telnet.EchoOptionHandler;
 import org.apache.commons.net.telnet.TelnetClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,6 +138,8 @@ public class MpdPlayer extends AbstractMusicPlayer {
 //    client.getOutputStream().flush();
 //
 //    awaitOk();
+//    getActivePlaylist().setErrorState("could not execute cmd");
+//    getActivePlaylist().setErrorHint("maybe restart server");
     try {
       Thread.sleep(500);
     } catch (InterruptedException e) {

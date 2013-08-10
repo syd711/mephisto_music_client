@@ -7,6 +7,7 @@ $.mobile.page.prototype.options.domCache = false;
  * The onload handler of the site
  */
 function initSite() {
+    hideErrorState();
     hidePlaylistView();
     initPlayer();
     initSearch();
@@ -36,10 +37,8 @@ function albums() {
     hidePlaylistView();
     hideCollectionView();
     setNameAndTitle('Albums', '');
-    loading('Loading Albums');
     $.getJSON('/rest/collections/albums', function(data) {
         showCollections(data.items);
-        loaded();
     });
 }
 
@@ -50,14 +49,12 @@ function artistAlbums(collectionId) {
     hidePlaylistView();
     hideCollectionView();
     setNameAndTitle('Albums', '');
-    loading('Loading Albums');
     $.getJSON('/rest/collections/artist/albums/' + collectionId, function(data) {
         if(data.items.length > 0) {
             setNameAndTitle('Albums', data.items[0].artist);
             setToolbarLink('artistAlbums(' + collectionId + ')');
         }
         showCollections(data.items);
-        loaded();
     });
 }
 
@@ -68,14 +65,12 @@ function genre(collectionId) {
     hidePlaylistView();
     hideCollectionView();
     setNameAndTitle('Genre', '');
-    loading('Loading Genres');
     $.getJSON('/rest/collections/genre/albums/' + collectionId, function(data) {
         if(data.items.length > 0) {
             setNameAndTitle('Genre', data.items[0].genre);
             setToolbarLink('genre(' + collectionId + ')');
         }
         showCollections(data.items);
-        loaded();
     });
 }
 
@@ -114,7 +109,6 @@ function showCollections(collectionsItems) {
 function showCollection(id, callback) {
     hideCollectionView();
     showPlaylistView();
-    loading('Loading Album');
     $.getJSON('/rest/collections/album/' + id, function(value) {
             var items = [];
             var url = value.artUrl;
@@ -145,10 +139,12 @@ function showCollection(id, callback) {
             $('#playlist-header').append(items);
 
             var items = [];
+            var trackCount = 0;
             $.each(value.songs, function(key, song) {
+                trackCount++;
                 var track = song.track;
                 if(song.track == 0) {
-                    track = '';
+                    track = trackCount;
                 }
                 var html='<tr id="row-track-' + song.mid + '" class="row';
                 if(song.mid == getActiveTrackId()) {
@@ -164,7 +160,6 @@ function showCollection(id, callback) {
             });
             $('#playlist-table-body').empty();
             $('#playlist-table-body').append(items);
-            loaded();
 
             if(getActiveTrackId() > 0) {
                 var activeTrack = getActiveTrackId();

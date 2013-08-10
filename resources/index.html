@@ -26,7 +26,7 @@
                 <tr>
                     <td width="5">&nbsp;</td>
                     <td width="70%"><a href="#" onclick="albums()"><img src="img/logo.png" border="0" alt="" /></a></td>
-                    <td><input type="search" data-theme="c" name="search" id="search" value="" placeholder="Search..." style="width:200px;height:30px;"></td>
+                    <td><div id="search-bar"><input type="search" data-theme="c" name="search" id="search" value="" placeholder="Search..." style="width:200px;height:30px;"></div></td>
                     <td width="10">&nbsp;</td>
                 </tr>
             </table>
@@ -66,6 +66,7 @@
     <!--Content-->
     <div data-role="content" id="content">
 
+       <div id="errorState"></div>
        <div id="collection"></div>
        <div id="playlist">
            <div id="playlist-header" style="height:150px;"></div>
@@ -88,7 +89,7 @@
     </div>
     <!-- /content -->
 
-    <div data-role="footer" data-theme="c" data-position="fixed" data-tap-toggle="false" class="ui-bar">
+    <div data-role="footer" data-theme="c" data-position="fixed" data-tap-toggle="false" class="ui-bar" id="footer-bar">
         <div data-role="controlgroup" data-type="horizontal">
             <div id="progressbar" class="progressbar">
                 <div id="progress" style="width:0%;" class="progress"></div>

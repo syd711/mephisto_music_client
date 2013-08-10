@@ -25,10 +25,16 @@ paused = false;
 
      loadActivePlaylist(function(playlist) {
         if(playlist) {
-            setActiveCollectionId(playlist.mid);
-            showCollection(playlist.mid, function() {
-                refreshUI(playlist, false);
-            });
+            if(playlist.errorState) {
+                showErrorState(playlist.errorState, playlist.errorHint);
+            }
+            else {
+                setActiveCollectionId(playlist.mid);
+                showCollection(playlist.mid, function() {
+                    refreshUI(playlist, false);
+                });
+            }
+
         }
         else {
             albums();
@@ -49,6 +55,9 @@ function loadActivePlaylist(callback) {
  * Invoked for setting changes.
  */
 function stopPlayer() {
+    activeTrackId = -1;
+    activeCollectionId = -1;
+    paused = false;
     refreshUI(null, false);
 }
 
@@ -56,7 +65,12 @@ function stopPlayer() {
  * The toolbar play action
  */
 function playPressed() {
-    playCollection();
+    if(paused) {
+        playSong(getActiveTrackId());
+    }
+    else {
+        playCollection();
+    }
 }
 
 
@@ -71,10 +85,11 @@ function playCollection() {
 }
 
 function playSong(id) {
+    var triggerProgress = !paused;
     setPaused(false);
     var collectionId = getActiveCollectionId();
     $.getJSON('/rest/player/playsong/' + collectionId + '/' + id, function(data) {
-        refreshUI(data, true);
+        refreshUI(data, triggerProgress);
     });
 }
 
@@ -148,7 +163,7 @@ function triggerProgressBar(millis) {
         percentTotal+=1;
        }
        $('#progress').attr('style', 'width:' + percentTotal + '%;');
-       var hidden = $('#progress').is(":hidden");
+       var hidden = false; //$('#progress').is(":hidden");
        if(percentTotal >= 100 || hidden) {
             $('#progress').attr('style', 'width:0%;');
             window.clearInterval(intervalId);
@@ -161,9 +176,14 @@ function triggerProgressBar(millis) {
  * Updates the play toolbar
  */
 function refreshUI(data, triggerProgress) {
+    //check error state first
+    if(data && data.errorState) {
+        showErrorState(data.errorState, playlist.errorHint);
+        return;
+    }
+
     if(data && data.activeSong) {
         selectTrack(data.activeSong.mid);
-        $('#progress').attr('style', 'width:0%;');
         $('#column-track-' + data.activeSong.mid).html('<span class="playing-icon"/>');
 
         //update actions
@@ -178,20 +198,28 @@ function refreshUI(data, triggerProgress) {
         $('#player-album-label').html('<a href="#" class="album-data" style="font-size:20px;font-weight:bold;" onclick="artistAlbums(\'' + data.mid + '\')">' + data.artist + '</a>' + ' - ' + data.name);
 
         if(triggerProgress) {
+            $('#progress').attr('style', 'width:0%;');
             triggerProgressBar(data.activeSong.durationMillis);
         }
     }
     else {
-        selectTrack(-1);
-        $('#progressbar').hide();
-        //$('#player-cover').hide();
-        //$('#player-cover').attr('src', '');
-        $('#player-title-label').html('');
-        //$('#player-album-label').html('');
-        $('#play-icon').attr('src','img/pplay.png');
-        $('#play-action').attr('onclick', 'playPressed()');
-        $('#progress').attr('style', 'width:0%;');
+      resetPlayer();
     }
+}
+
+/**
+ * Resets all UI elements of the player bar.
+ */
+function resetPlayer() {
+    selectTrack(-1);
+    $('#progressbar').hide();
+    //$('#player-cover').hide();
+    //$('#player-cover').attr('src', '');
+    $('#player-title-label').html('');
+    //$('#player-album-label').html('');
+    $('#play-icon').attr('src','img/pplay.png');
+    $('#play-action').attr('onclick', 'playPressed()');
+    $('#progress').attr('style', 'width:0%;');
 }
 
 /**
@@ -199,10 +227,9 @@ function refreshUI(data, triggerProgress) {
  */
 function applyVolumeSliderListener() {
 	$('.ui-slider').on('mouseup', function() {
-		$.mobile.loading('show');
 		var slider_value = $("#volume-slider").val();
 		$.getJSON('/rest/player/volume/set/' + slider_value, function(data) {
-			$.mobile.loading('hide');
+			//nothing
 		});
 	});
 
