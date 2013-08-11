@@ -18,10 +18,6 @@ public class Playlist extends MModel {
   private String name;
   private String artUrl;
   private int playlistSize = -1;
-
-  //errorState message, error state if != null
-  private String errorState;
-  private String errorHint;
   private Song activeSong;
 
   public Playlist(String name) {
@@ -145,21 +141,5 @@ public class Playlist extends MModel {
       }
     }
     return null;
-  }
-
-  public String getErrorState() {
-    return errorState;
-  }
-
-  public void setErrorState(String errorState) {
-    this.errorState = errorState;
-  }
-
-  public String getErrorHint() {
-    return errorHint;
-  }
-
-  public void setErrorHint(String errorHint) {
-    this.errorHint = errorHint;
   }
 }

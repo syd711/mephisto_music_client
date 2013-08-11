@@ -36,7 +36,6 @@ public class PlayerResource {
   public Playlist play(@PathParam("id") int id) {
     Playlist collection = Dictionary.getInstance().getPlaylist(id);
     if(Mephisto.getInstance().getPlayer().getActivePlaylist() == null) {
-
       LOG.info("Playing new playlist " + collection);
       Mephisto.getInstance().getPlayer().play(collection);
       return collection;

@@ -30,6 +30,11 @@ function initSearch() {
     });
 }
 
+function logoClicked() {
+    hideErrorState();
+    albums();
+}
+
 /**
  * Loads the album to a responsive layout
  */

@@ -90,7 +90,7 @@ function playSong(id) {
     var collectionId = getActiveCollectionId();
     $.getJSON('/rest/player/playsong/' + collectionId + '/' + id, function(data) {
         refreshUI(data, triggerProgress);
-    });
+    }).error(showErrorState);
 }
 
 function pause() {
@@ -119,6 +119,9 @@ function playNext() {
         if(data.activeSong) {
             selectTrack(data.activeSong.mid);
             playSong(data.activeSong.mid);
+        }
+        else {
+            refreshUI(data, false);
         }
     });
 }

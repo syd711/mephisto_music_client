@@ -23,6 +23,7 @@ public class Song extends MModel implements Comparable<Song> {
   private String composer;
 
   private int providerId;
+
   @JsonIgnore
   private Object originalModel;
 

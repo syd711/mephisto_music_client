@@ -25,14 +25,16 @@ function getCollectionId() {
 
 
 function hideErrorState() {
+    $('#footer-bar').show();
+    $('#search-bar').show();
     $('#errorState').hide();
 }
 
-function showErrorState(msg, hint) {
+function showErrorState(jqXHR, textStatus, errorThrown) {
     enableControls(false);
     setNameAndTitle('System Error', '');
     $('#errorState').show();
-    $('#errorState').html('<span class="error-msg">Error executing system call: ' + msg + '</span><br><span class="error-hint">' + hint + '</span>');
+    $('#errorState').html('<span class="error-msg">HTTP Error Code: ' + errorThrown + '</span><br><span class="error-hint">' + jqXHR.responseText + '</span>');
 }
 
 /**

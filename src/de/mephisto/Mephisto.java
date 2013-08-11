@@ -1,5 +1,6 @@
 package de.mephisto;
 
+import com.sun.jersey.api.core.ScanningResourceConfig;
 import de.mephisto.http.Server;
 import de.mephisto.player.IMusicPlayer;
 import de.mephisto.player.PlayerFactory;
