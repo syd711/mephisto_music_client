@@ -1,6 +1,7 @@
 package de.mephisto.dictionary;
 
 import de.mephisto.model.*;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ public class Dictionary {
   private final static Logger LOG = LoggerFactory.getLogger(Dictionary.class);
   private static Dictionary instance = new Dictionary();
 
-  private Map<String, Stream> streams = new HashMap<String, Stream>();
   private Map<String, Song> songs = new HashMap<String, Song>();
   private Map<String, Genre> genres = new HashMap<String, Genre>();
   private Map<String, Album> albums = new HashMap<String, Album>();
@@ -64,14 +64,6 @@ public class Dictionary {
     List<Playlist> list = new ArrayList(albums.values());
     Collections.sort(list, new SongCollectionComparator());
     return list;
-  }
-
-  /**
-   * Adds a stream to the dictionary.
-   * @param stream
-   */
-  public void addStream(Stream stream) {
-    streams.put(stream.getUrl(), stream);
   }
 
   public Album getAlbum(int id) {

@@ -22,7 +22,7 @@ function initSettings() {
 
         $('#statistics').empty();
         $('#statistics').append(html).trigger('create');
-     });
+     }).error(showErrorState);
 }
 
 /**
@@ -59,7 +59,7 @@ function reloadProviders() {
         loaded();
         initSettings();
         albums();
-    });
+    }).error(showErrorState);
 }
 
 /**
@@ -75,6 +75,6 @@ function detectProviders() {
             enableControls(true);
             albums();
         }
-    });
+    }).error(showErrorState);
 }
 
