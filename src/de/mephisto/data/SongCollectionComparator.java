@@ -1,4 +1,4 @@
-package de.mephisto.dictionary;
+package de.mephisto.data;
 
 import de.mephisto.model.Playlist;
 

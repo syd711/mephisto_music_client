@@ -1,19 +1,19 @@
 package de.mephisto.model;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Model for wrapping several streams.
  */
 public class Streams {
-  private List<Stream> streams = new ArrayList<Stream>();
+  private Collection<Stream> streams = new ArrayList<Stream>();
 
-  public List<Stream> getStreams() {
+  public Collection<Stream> getStreams() {
     return streams;
   }
 
-  public void setStreams(List<Stream> streams) {
+  public void setStreams(Collection<Stream> streams) {
     this.streams = streams;
   }
 }

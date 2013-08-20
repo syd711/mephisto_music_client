@@ -1,3 +1,14 @@
+/**
+ * Global Settings
+ */
+$.mobile.page.prototype.options.domCache = false;
+STREAM_MODE = "1";
+MUSIC_MODE = "0";
+playbackMode = MUSIC_MODE;
+
+/**
+ * Loads the provider info and the statistic
+ */
 function initSettings() {
      $.getJSON('/rest/settings/get', function(data) {
         var html='';
@@ -19,10 +30,44 @@ function initSettings() {
         html = '';
         html+='<div class="settings-value">Songs: ' + data.songs + '</div>';
         html+='<div class="settings-value">Albums: ' + data.albums + '</div>';
+        html+='<div class="settings-value">Streams: ' + data.streams + '</div>';
 
         $('#statistics').empty();
         $('#statistics').append(html).trigger('create');
+
+        var state = localStorage.getItem("mephisto-play-mode");
+        if(state === STREAM_MODE) {
+            $('#playback-music').removeAttr("checked");
+            $('#playback-streams').attr("checked","checked");
+        }
      }).error(showErrorState);
+}
+
+
+/**
+ * Depending on the stored state, the play is switched to stream mode or player mode.
+ */
+function applyInitialView() {
+    var state = localStorage.getItem("mephisto-play-mode") || MUSIC_MODE;
+    switchToState(state);
+}
+
+/**
+ * Toggles the playback mode of the app.
+ */
+function switchToState(state) {
+    playbackMode = state;
+    stopPlayer();
+
+    if(state == MUSIC_MODE) {
+        enableControls(true);
+        albums();
+    }
+    else if(state == STREAM_MODE) {
+        enableControls(false);
+        streams();
+    }
+    localStorage.setItem("mephisto-play-mode", state);
 }
 
 /**
@@ -41,7 +86,6 @@ function enableProvider(name, id) {
     $.getJSON('/rest/settings/provider/' + id + '/enable/' + enable, function(data) {
         enableControls(true);
         initSettings();
-        loaded();
         albums();
    });
 }

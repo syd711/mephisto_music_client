@@ -1,12 +1,12 @@
 package de.mephisto.rest.resources;
 
 import de.mephisto.Mephisto;
-import de.mephisto.dictionary.Dictionary;
+import de.mephisto.data.MusicDictionary;
+import de.mephisto.data.StreamDictionary;
 import de.mephisto.model.ProviderInfo;
 import de.mephisto.model.Settings;
 import de.mephisto.player.PlayerFactory;
 import de.mephisto.service.IMusicProvider;
-import de.mephisto.service.ProviderManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +32,7 @@ public class SettingsResource {
     Mephisto.getInstance().getPlayer().stop();
     Mephisto.getInstance().setPlayer(PlayerFactory.createPlayer());
 
-    Dictionary.getInstance().reset();
+    MusicDictionary.getInstance().reset();
 
     Mephisto.getInstance().getProviderManager().init();
     return true;
@@ -44,7 +44,7 @@ public class SettingsResource {
     LOG.info("Checking for removable devices");
     if(Mephisto.getInstance().getProviderManager().runDetectionCheck()) {
       Mephisto.getInstance().getPlayer().stop();
-      Dictionary.getInstance().reset();
+      MusicDictionary.getInstance().reset();
       Mephisto.getInstance().getProviderManager().refresh();
       return true;
     }
@@ -56,8 +56,9 @@ public class SettingsResource {
   @Path("get")
   public Settings get() {
     Settings settings = new Settings();
-    settings.setAlbums(Dictionary.getInstance().getAlbums().size());
-    settings.setSongs(Dictionary.getInstance().getSongs().size());
+    settings.setAlbums(MusicDictionary.getInstance().getAlbums().size());
+    settings.setSongs(MusicDictionary.getInstance().getSongs().size());
+    settings.setStreams(StreamDictionary.getInstance().getStreams().size());
 
     Collection<IMusicProvider> providers = Mephisto.getInstance().getProviderManager().getProviders();
     for (IMusicProvider provider : providers) {
@@ -71,7 +72,7 @@ public class SettingsResource {
   @Path("provider/{id}/enable/{enable}")
   public boolean enableProvider(@PathParam("id") int providerId, @PathParam("enable") boolean enable) {
     Mephisto.getInstance().getPlayer().stop();
-    Dictionary.getInstance().reset();
+    MusicDictionary.getInstance().reset();
 
     IMusicProvider provider = Mephisto.getInstance().getProviderManager().getProvider(providerId);
     LOG.info("Settings " + provider + " to " + enable);

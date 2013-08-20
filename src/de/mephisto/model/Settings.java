@@ -9,6 +9,7 @@ import java.util.List;
 public class Settings {
   private int songs;
   private int albums;
+  private int streams;
   private List<ProviderInfo> providers = new ArrayList<ProviderInfo>();
 
   public int getSongs() {
@@ -33,5 +34,13 @@ public class Settings {
 
   public void setProviders(List<ProviderInfo> providers) {
     this.providers = providers;
+  }
+
+  public int getStreams() {
+    return streams;
+  }
+
+  public void setStreams(int streams) {
+    this.streams = streams;
   }
 }

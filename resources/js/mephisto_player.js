@@ -37,7 +37,7 @@ paused = false;
 
         }
         else {
-            albums();
+            applyInitialView();
         }
      });
  }

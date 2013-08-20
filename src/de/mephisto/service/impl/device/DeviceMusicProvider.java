@@ -1,12 +1,11 @@
 package de.mephisto.service.impl.device;
 
 import de.mephisto.Mephisto;
-import de.mephisto.dictionary.Dictionary;
+import de.mephisto.data.MusicDictionary;
 import de.mephisto.model.Song;
 import de.mephisto.service.AbstractMusicProvider;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.mp3.MP3AudioHeader;
@@ -17,8 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Google Music provider.
@@ -60,10 +57,10 @@ public class DeviceMusicProvider extends AbstractMusicProvider {
       if (file.isFile() && Mephisto.getInstance().getPlayer().isPlayable(file)) {
         Song song = songFor(file);
         if (song != null) {
-          Dictionary.getInstance().addSong(song);
+          MusicDictionary.getInstance().addSong(song);
           resolveArtwork(file, song); //done afterwards since we need the generated song id here
           //TODO re-add to album, since the cover is only resolved then for the album only
-          Dictionary.getInstance().addToAlbum(song);
+          MusicDictionary.getInstance().addToAlbum(song);
         }
       }
     }

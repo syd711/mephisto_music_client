@@ -1,9 +1,4 @@
 /**
- * Global Settings
- */
-$.mobile.page.prototype.options.domCache = false;
-
-/**
  * The onload handler of the site
  */
 function initSite() {

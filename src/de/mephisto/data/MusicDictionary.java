@@ -1,7 +1,6 @@
-package de.mephisto.dictionary;
+package de.mephisto.data;
 
 import de.mephisto.model.*;
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +10,10 @@ import java.util.*;
 /**
  * The collected music, gathered by all music providers.
  */
-public class Dictionary {
-  private final static Logger LOG = LoggerFactory.getLogger(Dictionary.class);
-  private static Dictionary instance = new Dictionary();
+public class MusicDictionary {
+  private final static Logger LOG = LoggerFactory.getLogger(MusicDictionary.class);
+
+  private static MusicDictionary instance = new MusicDictionary();
 
   private Map<String, Song> songs = new HashMap<String, Song>();
   private Map<String, Genre> genres = new HashMap<String, Genre>();
@@ -28,7 +28,7 @@ public class Dictionary {
    *
    * @return
    */
-  public static Dictionary getInstance() {
+  public static MusicDictionary getInstance() {
     return instance;
   }
 
@@ -41,7 +41,7 @@ public class Dictionary {
   }
 
   public void reset() {
-    instance = new Dictionary();
+    instance = new MusicDictionary();
     LOG.info("Music dictionary has been cleared.");
   }
 

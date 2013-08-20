@@ -4,8 +4,9 @@
     <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
     <script src="js/mephisto_util.js"></script>
     <script src="js/mephisto_settings.js"></script>
-    <script src="js/mephisto.js"></script>
+    <script src="js/mephisto_music.js"></script>
     <script src="js/mephisto_player.js"></script>
+    <script src="js/mephisto_streams.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css"/>
     <link rel="stylesheet" href="css/mephisto-custom.css"/>
     <!--<link rel="stylesheet" href="css/mephisto.css"/>-->
@@ -51,10 +52,17 @@
 
     <!--Sidebar-->
     <div id="sidebar" data-theme="b" data-role="panel" data-position="left" data-dismissible="true" data-swipe-close="true" data-display="overlay">
-        <input onclick="reloadProviders()" type="button" value="Reload Music Library" data-icon="refresh" data-theme="c">
+            <label class="settings-label">Playback Mode</label>
+
+                <input type="radio" onchange="switchToState('0')" name="playback-mode" data-theme="c" id="playback-music" value="on">
+                <label for="playback-music">Music</label>
+                <input type="radio" onchange="switchToState('1')" name="playback-mode" data-theme="c" id="playback-streams" value="off">
+                <label for="playback-streams">Streams</label>
 
         <label class="settings-label">Statistic</label>
         <div id="statistics"></div>
+
+        <input onclick="reloadProviders()" type="button" value="Reload Library" data-icon="refresh" data-theme="c">
 
         <label class="settings-label">Provider List</label>
         <div id="providers"></div>

@@ -1,7 +1,7 @@
 package de.mephisto.test;
 
 import de.mephisto.Mephisto;
-import de.mephisto.dictionary.Dictionary;
+import de.mephisto.data.MusicDictionary;
 import de.mephisto.model.Playlist;
 import de.mephisto.player.MpdPlayer;
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class PlayerTest {
   @Test
   public void testPlayback() throws InterruptedException {
     Mephisto.getInstance();
-    Iterator<Playlist> iterator = Dictionary.getInstance().getAlbums().iterator();
+    Iterator<Playlist> iterator = MusicDictionary.getInstance().getAlbums().iterator();
     iterator.next();
     iterator.next();
     Playlist p = iterator.next();

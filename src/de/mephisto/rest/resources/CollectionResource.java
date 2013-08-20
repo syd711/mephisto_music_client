@@ -1,6 +1,6 @@
 package de.mephisto.rest.resources;
 
-import de.mephisto.dictionary.Dictionary;
+import de.mephisto.data.MusicDictionary;
 import de.mephisto.model.Album;
 import de.mephisto.model.PlaylistCollection;
 import de.mephisto.rest.JSONViews;
@@ -21,7 +21,7 @@ public class CollectionResource {
   @JsonView({JSONViews.AlbumsView.class})
   public PlaylistCollection getAlbums() {
     PlaylistCollection collection = new PlaylistCollection();
-    collection.setItems(Dictionary.getInstance().getAlbums());
+    collection.setItems(MusicDictionary.getInstance().getAlbums());
     return collection;
   }
 
@@ -30,7 +30,7 @@ public class CollectionResource {
   @JsonView({JSONViews.AlbumsView.class})
   public PlaylistCollection getArtistAlbums(@PathParam("id") int mid) {
     PlaylistCollection collection = new PlaylistCollection();
-    collection.setItems(Dictionary.getInstance().getAlbumsOfArtist(mid));
+    collection.setItems(MusicDictionary.getInstance().getAlbumsOfArtist(mid));
     return collection;
   }
 
@@ -39,7 +39,7 @@ public class CollectionResource {
   @JsonView({JSONViews.AlbumsView.class})
   public PlaylistCollection getGenreAlbums(@PathParam("id") int mid) {
     PlaylistCollection collection = new PlaylistCollection();
-    collection.setItems(Dictionary.getInstance().getAlbumsOfGenre(mid));
+    collection.setItems(MusicDictionary.getInstance().getAlbumsOfGenre(mid));
     return collection;
   }
 
@@ -48,7 +48,7 @@ public class CollectionResource {
   @Path("album/{id}")
   @JsonView({JSONViews.AlbumView.class})
   public Album getAlbum(@PathParam("id") int id) {
-    return Dictionary.getInstance().getAlbum(id);
+    return MusicDictionary.getInstance().getAlbum(id);
   }
 
   @GET
@@ -56,7 +56,7 @@ public class CollectionResource {
   @JsonView({JSONViews.AlbumsView.class})
   public PlaylistCollection search(@QueryParam("term") String term) {
     PlaylistCollection collection = new PlaylistCollection();
-    collection.setItems(Dictionary.getInstance().search(term));
+    collection.setItems(MusicDictionary.getInstance().search(term));
     return collection;
   }
 }

@@ -24,6 +24,13 @@ public interface IMusicPlayer {
   public Song play(Song song);
 
   /**
+   * Playback of the given stream
+   * @param stream
+   * @return
+   */
+  public Stream play(Stream stream);
+
+  /**
    * Playback of a single song
    */
   public Song play(Playlist playlist, Song song);
@@ -68,12 +75,6 @@ public interface IMusicPlayer {
    * Playback of the previous song.
    */
   public Playlist previous();
-
-  /**
-   * Playback of the given stream
-   * @param stream
-   */
-  public boolean playStream(Stream stream);
 
   /**
    * Stops the player, used for reloading all data.

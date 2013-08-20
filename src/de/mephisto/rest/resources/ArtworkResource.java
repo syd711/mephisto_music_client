@@ -1,6 +1,6 @@
 package de.mephisto.rest.resources;
 
-import de.mephisto.dictionary.Dictionary;
+import de.mephisto.data.MusicDictionary;
 import de.mephisto.model.Song;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class ArtworkResource {
   @Path("cover/{id}")
   @Produces("image/png")
   public Response getArtwork(@PathParam("id")int id) {
-    Song song = Dictionary.getInstance().getSong(id);
+    Song song = MusicDictionary.getInstance().getSong(id);
     try {
       byte[] data = song.getArtwork();
       BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));

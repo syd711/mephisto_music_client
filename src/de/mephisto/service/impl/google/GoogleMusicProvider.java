@@ -1,6 +1,6 @@
 package de.mephisto.service.impl.google;
 
-import de.mephisto.dictionary.Dictionary;
+import de.mephisto.data.MusicDictionary;
 import de.mephisto.service.AbstractMusicProvider;
 import gmusic.api.impl.GoogleMusicAPI;
 import gmusic.api.model.Playlist;
@@ -42,13 +42,13 @@ public class GoogleMusicProvider extends AbstractMusicProvider {
       Playlists lists = api.getAllPlaylists();
       for(Playlist list : lists.getPlaylists()) {
         de.mephisto.model.Playlist p = playlistFor(list);
-        Dictionary.getInstance().addPlaylist(p);
+        MusicDictionary.getInstance().addPlaylist(p);
       }
 
       Collection<Song> songs = api.getAllSongs();
       for (Song song : songs) {
         de.mephisto.model.Song mSong = songFor(song);
-        Dictionary.getInstance().addSong(mSong);
+        MusicDictionary.getInstance().addSong(mSong);
       }
       LOG.info(this + " finished loading songs: " + songs.size() + " total");
     } catch (Exception e) {

@@ -9,7 +9,7 @@ import java.io.File;
  * Abstract superclass for music players.
  */
 abstract public class AbstractMusicPlayer implements IMusicPlayer {
-  private Playlist activePlaylist;
+  protected Playlist activePlaylist;
 
   @Override
   public Playlist play(Playlist playlist) {

@@ -27,8 +27,8 @@ public class WindowsPlayer extends AbstractMusicPlayer {
   }
 
   @Override
-  public boolean playStream(Stream stream) {
-    return true;
+  public Stream play(Stream stream) {
+    return stream;
   }
 
   @Override

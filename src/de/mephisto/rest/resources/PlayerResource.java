@@ -1,7 +1,7 @@
 package de.mephisto.rest.resources;
 
 import de.mephisto.Mephisto;
-import de.mephisto.dictionary.Dictionary;
+import de.mephisto.data.MusicDictionary;
 import de.mephisto.model.Playlist;
 import de.mephisto.model.Song;
 import de.mephisto.rest.JSONViews;
@@ -34,7 +34,7 @@ public class PlayerResource {
   @Path("play/{id}")
   @JsonView({JSONViews.AlbumsView.class})
   public Playlist play(@PathParam("id") int id) {
-    Playlist collection = Dictionary.getInstance().getPlaylist(id);
+    Playlist collection = MusicDictionary.getInstance().getPlaylist(id);
     if(Mephisto.getInstance().getPlayer().getActivePlaylist() == null) {
       LOG.info("Playing new playlist " + collection);
       Mephisto.getInstance().getPlayer().play(collection);
@@ -48,7 +48,7 @@ public class PlayerResource {
   @Path("playsong/{collectionId}/{id}")
   @JsonView({JSONViews.AlbumsView.class})
   public Playlist playSong(@PathParam("collectionId") int collectionId, @PathParam("id") int id) {
-    Playlist collection = Dictionary.getInstance().getPlaylist(collectionId);
+    Playlist collection = MusicDictionary.getInstance().getPlaylist(collectionId);
     Song song = collection.getSong(id);
     Mephisto.getInstance().getPlayer().play(collection, song);
     return collection;

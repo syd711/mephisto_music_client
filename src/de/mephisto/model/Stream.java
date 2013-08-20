@@ -6,6 +6,7 @@ package de.mephisto.model;
 public class Stream extends MModel {
   private String url;
   private String name;
+  private String title;
 
   public String getName() {
     return name;
@@ -21,5 +22,13 @@ public class Stream extends MModel {
 
   public void setUrl(String url) {
     this.url = url;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
   }
 }

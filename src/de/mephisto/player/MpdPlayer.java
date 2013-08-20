@@ -66,9 +66,10 @@ public class MpdPlayer extends AbstractMusicPlayer {
   }
 
   @Override
-  public boolean playStream(Stream stream) {
+  public Stream play(Stream stream) {
+    activePlaylist = null;
     playUrl(stream.getUrl());
-    return true;
+    return stream;
   }
 
   @Override
