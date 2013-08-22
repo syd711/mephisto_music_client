@@ -1,6 +1,7 @@
 package de.mephisto;
 
 import com.sun.jersey.api.core.ScanningResourceConfig;
+import de.mephisto.data.StreamDictionary;
 import de.mephisto.http.Server;
 import de.mephisto.player.IMusicPlayer;
 import de.mephisto.player.PlayerFactory;
@@ -59,6 +60,9 @@ public class Mephisto {
 
       LOG.info("Loading Music Providers");
       providerManager = new ProviderManager();
+
+      LOG.info("Loading Streams");
+      StreamDictionary.getInstance().init();
     }
     catch (Exception e) {
       LOG.info("Error starting Mephisto: " + e.getMessage(), e);

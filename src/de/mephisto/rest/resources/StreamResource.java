@@ -45,10 +45,16 @@ public class StreamResource {
 
   @GET
   @Path("play/{id}")
-  public Stream play(@PathParam("id") int mid) {
+  public Stream playOrPause(@PathParam("id") int mid) {
     Stream stream = StreamDictionary.getInstance().getStream(mid, false);
     Mephisto.getInstance().getPlayer().play(stream);
     return stream;
+  }
+
+  @GET
+  @Path("order")
+  public boolean saveOrder(@QueryParam("order") String order) {
+    return StreamDictionary.getInstance().saveOrder(order);
   }
 
   @GET

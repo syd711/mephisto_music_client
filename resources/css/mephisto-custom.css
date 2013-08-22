@@ -282,3 +282,11 @@ div.progress {
    font-family: 'Yanone Kaffeesatz', sans-serif;
    font-size: 18px;
 }
+
+/**
+ * Streams
+ */
+.stream-artist {
+    margin-top: 4px;
+    font-size: 16px;
+}

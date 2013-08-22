@@ -2,6 +2,7 @@ package de.mephisto.player;
 
 import de.mephisto.model.Playlist;
 import de.mephisto.model.Song;
+import de.mephisto.model.Stream;
 
 import java.io.File;
 
@@ -10,6 +11,7 @@ import java.io.File;
  */
 abstract public class AbstractMusicPlayer implements IMusicPlayer {
   protected Playlist activePlaylist;
+  protected Stream activeStream;
 
   @Override
   public Playlist play(Playlist playlist) {

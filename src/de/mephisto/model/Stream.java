@@ -8,6 +8,10 @@ public class Stream extends MModel {
   private String name;
   private String title;
 
+  public Stream(int mid) {
+    super.setMID(mid);
+  }
+
   public String getName() {
     return name;
   }
