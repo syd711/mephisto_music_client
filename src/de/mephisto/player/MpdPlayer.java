@@ -33,6 +33,7 @@ public class MpdPlayer extends AbstractMusicPlayer {
   private int ret_read = 0;
   private Song current;
   private boolean localModeEnabled;
+  private int volume = 99;
 
   public MpdPlayer() {
     this.config = Config.getConfiguration(CONFIG_NAME);
@@ -55,7 +56,7 @@ public class MpdPlayer extends AbstractMusicPlayer {
       in = client.getInputStream();
 
       if(localModeEnabled) {
-        executeLocalCommand("volume 95");
+        executeLocalCommand("volume " + volume);
       }
       LOG.info("Initialized " + this);
     } catch (Exception e) {
@@ -170,7 +171,7 @@ public class MpdPlayer extends AbstractMusicPlayer {
     try {
       LOG.info("Executing mpc command '" + cmd + "'");
       cmd = "mpc " + cmd + "\n";
-      Process p = Runtime.getRuntime().exec("cmd /c " + cmd);
+      Process p = Runtime.getRuntime().exec(cmd);
       p.waitFor();
       BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
       String line = reader.readLine();
@@ -217,6 +218,7 @@ public class MpdPlayer extends AbstractMusicPlayer {
   @Override
   public boolean setVolume(int volume) {
     if (localModeEnabled) {
+      this.volume = volume;
       executeLocalCommand("volume " + volume);
     }
     return true;
@@ -225,8 +227,7 @@ public class MpdPlayer extends AbstractMusicPlayer {
   @Override
   public int getVolume() {
     if (localModeEnabled) {
-      String cmdResult = executeLocalCommand("volume");
-      return Integer.parseInt(cmdResult);
+      return this.volume;
     }
     return 0;
   }

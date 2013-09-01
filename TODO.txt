@@ -1,0 +1,2 @@
+- Fix logging
+- Provide external events API
