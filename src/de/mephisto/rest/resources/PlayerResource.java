@@ -78,6 +78,12 @@ public class PlayerResource {
   }
 
   @GET
+  @Path("paused")
+  public boolean paused() {
+    return Mephisto.getInstance().getPlayer().paused();
+  }
+
+  @GET
   @Path("volume/set/{volume}")
   public int setVolume(@PathParam("volume") int volume) {
     LOG.info("Applying volume level " + volume);

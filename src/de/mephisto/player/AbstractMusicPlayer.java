@@ -12,6 +12,7 @@ import java.io.File;
 abstract public class AbstractMusicPlayer implements IMusicPlayer {
   protected Playlist activePlaylist;
   protected Stream activeStream;
+  private boolean paused = false;
 
   @Override
   public Playlist play(Playlist playlist) {
@@ -21,6 +22,7 @@ abstract public class AbstractMusicPlayer implements IMusicPlayer {
     }
     else {
       this.activePlaylist = playlist;
+      this.activeStream = null;
       return next();
     }
 
@@ -28,6 +30,7 @@ abstract public class AbstractMusicPlayer implements IMusicPlayer {
 
   @Override
   public Song play(Playlist playlist, Song song) {
+    this.activeStream = null;
     this.activePlaylist = playlist;
     this.activePlaylist.setActiveSong(song);
     return play(song);
@@ -56,8 +59,22 @@ abstract public class AbstractMusicPlayer implements IMusicPlayer {
   }
 
   @Override
+  public Stream getActiveStream() {
+    return activeStream;
+  }
+
+
+  @Override
   public boolean isPlayable(File f) {
     String name = f.getName();
     return name.endsWith(".mp3");
+  }
+
+  public boolean isPaused() {
+    return paused;
+  }
+
+  public void setPaused(boolean paused) {
+    this.paused = paused;
   }
 }

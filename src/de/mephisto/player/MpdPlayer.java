@@ -53,6 +53,10 @@ public class MpdPlayer extends AbstractMusicPlayer {
       int port = config.getInt(PROPERTY_PORT, 6600);
       client.connect(host, port);
       in = client.getInputStream();
+
+      if(localModeEnabled) {
+        executeLocalCommand("volume 95");
+      }
       LOG.info("Initialized " + this);
     } catch (Exception e) {
       LOG.error("Failed to connect to " + this + ": " + e.getMessage());
@@ -61,8 +65,14 @@ public class MpdPlayer extends AbstractMusicPlayer {
 
   @Override
   public boolean pause() {
+    setPaused(true);
     executeTelnetCommand("pause");
     return true;
+  }
+
+  @Override
+  public boolean paused() {
+    return isPaused();
   }
 
   @Override
@@ -109,6 +119,7 @@ public class MpdPlayer extends AbstractMusicPlayer {
    * @throws IOException
    */
   public void playUrl(String url) {
+    setPaused(false);
     LOG.info("Playback of URL: " + url);
     try {
       executeTelnetCommand("stop");
@@ -131,6 +142,10 @@ public class MpdPlayer extends AbstractMusicPlayer {
     try {
       LOG.info("Executing telnet command '" + cmd + "'");
       cmd += "\n";
+      if(client.getOutputStream() == null) {
+        connect();
+      }
+
       if (client.getOutputStream() != null) {
         client.getOutputStream().write(cmd.getBytes());
         client.getOutputStream().flush();
@@ -154,7 +169,7 @@ public class MpdPlayer extends AbstractMusicPlayer {
   private String executeLocalCommand(String cmd) {
     try {
       LOG.info("Executing mpc command '" + cmd + "'");
-      cmd = "mpc" + cmd + "\n";
+      cmd = "mpc " + cmd + "\n";
       Process p = Runtime.getRuntime().exec("cmd /c " + cmd);
       p.waitFor();
       BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -179,18 +194,19 @@ public class MpdPlayer extends AbstractMusicPlayer {
    */
   private boolean awaitOk() {
     try {
-      do {
-        ret_read = in.read(buff);
-        if (ret_read > 0) {
-          String msg = new String(buff, 0, ret_read).trim();
-          LOG.info("MPD: " + msg);
-          if (msg.contains("OK")) {
-            return true;
-          }
-        }
-      }
-      while (ret_read >= 0);
-    } catch (IOException e) {
+//      do {
+//        ret_read = in.read(buff);
+//        if (ret_read > 0) {
+//          String msg = new String(buff, 0, ret_read).trim();
+//          LOG.info("MPD: " + msg);
+//          if (msg.contains("OK")) {
+//            return true;
+//          }
+//        }
+//      }
+//      while (ret_read >= 0);
+      Thread.sleep(100);
+    } catch (Exception e) {
       LOG.error("Exception while reading from MPD:" + e.getMessage());
       throw new PlayerException("Exception while reading from MPD:" + e.getMessage() + ", check MPD server is running");
     }

@@ -226,7 +226,12 @@ div.progress {
     font-weight: normal;
 }
 
-.ui-btn-corner-all {
+.ui-checkbox .ui-btn-corner-all {
+    -webkit-border-radius: 0em;
+    border-radius: 0em;
+}
+
+.ui-controlgroup .ui-controlgroup-controls, .ui-controlgroup .ui-radio, .ui-controlgroup .ui-checkbox, .ui-controlgroup .ui-select, .ui-controlgroup li {
     -webkit-border-radius: 0em;
     border-radius: 0em;
 }
@@ -289,4 +294,9 @@ div.progress {
 .stream-artist {
     margin-top: 4px;
     font-size: 16px;
+}
+
+.stream-error {
+    font-size: 16px;
+    color: #ff3e3d;
 }

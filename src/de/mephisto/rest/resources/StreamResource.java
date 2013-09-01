@@ -24,6 +24,12 @@ public class StreamResource {
   }
 
   @GET
+  @Path("stream")
+  public Stream getStream() {
+    return Mephisto.getInstance().getPlayer().getActiveStream();
+  }
+
+  @GET
   @Path("get/{id}")
   public Stream getStream(@PathParam("id") int mid) {
     return StreamDictionary.getInstance().getStream(mid, true);
@@ -36,10 +42,9 @@ public class StreamResource {
   }
 
   @GET
-  @Path("update/{id}")
-  public Stream updateStream(@PathParam("id") int mid, @FormParam("url") String url) {
-    Stream s = StreamDictionary.getInstance().getStream(mid, false);
-    return StreamDictionary.getInstance().updateStream(s, url);
+  @Path("add")
+  public Stream addStream(@QueryParam("url") String url) {
+    return StreamDictionary.getInstance().addStream(url);
   }
 
 
@@ -55,12 +60,5 @@ public class StreamResource {
   @Path("order")
   public boolean saveOrder(@QueryParam("order") String order) {
     return StreamDictionary.getInstance().saveOrder(order);
-  }
-
-  @GET
-  @Path("pause")
-  public boolean pause() {
-    Mephisto.getInstance().getPlayer().pause();
-    return true;
   }
 }

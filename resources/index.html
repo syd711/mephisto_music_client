@@ -53,23 +53,28 @@
 
     <!--Sidebar-->
     <div id="sidebar" data-theme="b" data-role="panel" data-position="left" data-dismissible="true" data-swipe-close="true" data-display="overlay">
-            <label class="settings-label">Playback Mode</label>
-
-                <input type="radio" onchange="switchToState('0')" name="playback-mode" data-theme="c" id="playback-music" value="on">
-                <label for="playback-music">Music</label>
-                <input type="radio" onchange="switchToState('1')" name="playback-mode" data-theme="c" id="playback-streams" value="off">
-                <label for="playback-streams">Streams</label>
 
         <label class="settings-label">Statistic</label>
         <div id="statistics"></div>
 
-        <input onclick="reloadProviders()" type="button" value="Reload Library" data-icon="refresh" data-theme="c">
+         <label class="settings-label">Playback Mode</label>
+            <form>
+                <fieldset data-role="controlgroup">
+                <input data-corners="false" type="radio" onchange="switchToState('0')" name="playback-mode" data-theme="c" id="playback-music" value="on">
+                <label for="playback-music">Music</label>
+                <input data-corners="false" type="radio" onchange="switchToState('1')" name="playback-mode" data-theme="c" id="playback-streams" value="off">
+                <label for="playback-streams">Streams</label>
+                </fieldset>
+            </form>
 
-        <label class="settings-label">Provider List</label>
-        <div id="providers"></div>
+        <div id="music-settings-section">
+            <label class="settings-label">Provider List</label>
+            <div id="providers"></div>
 
-        <label class="settings-label">Removable Devices</label>
-        <input onclick="detectProviders()" type="button" value="Detect Removable Devices" data-icon="refresh" data-theme="c">
+            <label class="settings-label">Removable Devices</label>
+            <a href="#" data-role="button" data-corners="false" onclick="detectProviders()" data-icon="refresh" data-theme="c">Detect Removable Devices</a>
+            <a href="#" data-role="button" data-corners="false" onclick="reloadProviders()" data-icon="refresh" data-theme="c">Reload Library</a>
+        </div>
     </div>
 
     <!--Content-->
@@ -77,6 +82,22 @@
 
        <div id="errorState"></div>
        <div id="collection"></div>
+       <div id="streams">
+           <div>
+               <p>
+                <a data-role="button" href="#" data-corners="false" onclick="refreshStreams()" data-inline="true" data-icon="refresh" data-theme="c">Refresh Station Info</a>
+                <a data-role="button" href="#addStation" data-rel="popup" data-transition="pop" data-position-to="window" data-corners="false" data-inline="true" data-icon="plus" data-theme="c">Add Station</a>
+               </p>
+               <div data-role="popup" id="addStation" data-theme="d" data-overlay-theme="c" class="ui-content" style="max-width:600px; padding-bottom:2em;">
+                   <h3>Add Station</h3>
+                   <p>Enter the URL of the station you want to add below. </p>
+                   <p><input type="text" id="station-url-text"></p>
+                   <a data-corners="false" href="#" onclick="addStream()" data-role="button" data-rel="back" data-theme="c" data-icon="check" data-inline="true" data-mini="true">Add</a>
+                   <a data-corners="false" href="#" data-role="button" data-rel="back" data-inline="true" data-mini="true">Cancel</a>
+               </div>
+            </div>
+           <div id="streamlist-section"></div>
+       </div>
        <div id="playlist">
            <div id="playlist-header" style="height:150px;"></div>
            <div>
@@ -106,7 +127,7 @@
             <table cellpadding="0" cellspacing="0" width="100%">
                 <tr>
                     <td width="25%">
-                        <div style="margin-left:-21px;margin-top:-5px;margin-bottom:-3px;"><img id="player-cover" src="" style="width:60px;height:60px;" alt="" /></div>
+                        <div style="margin-left:-21px;margin-top:-5px;margin-bottom:-3px;"><a id="player-cover-link" href="#" onclick=""><img id="player-cover" src="" style="width:60px;height:60px;" alt="" /></a></div>
                         <div class="collection-title" style="font-size:22px;position:absolute;margin-top:-56px;margin-left: 40px;" id="player-title-label" class="album-data"></div>
                         <div class="collection-subtitle" style="font-size:20px;position:absolute;margin-top:-32px;margin-left: 40px;" id="player-album-label" class="album-data"></div>
                     </td>

@@ -3,6 +3,7 @@
  */
 function initSite() {
     hideErrorState();
+    hideStreamsView();
     hidePlaylistView();
     initPlayer();
     initSearch();
@@ -27,7 +28,12 @@ function initSearch() {
 
 function logoClicked() {
     hideErrorState();
-    albums();
+    if(isStreamMode()) {
+        streams();
+    }
+    else {
+        albums();
+    }
 }
 
 /**
@@ -36,6 +42,7 @@ function logoClicked() {
 function albums() {
     hidePlaylistView();
     hideCollectionView();
+    hideStreamsView();
     setNameAndTitle('Albums', '');
     $.getJSON('/rest/collections/albums', function(data) {
         showCollections(data.items);
@@ -101,6 +108,7 @@ function showCollections(collectionsItems) {
     $('#collection').empty();
     $('#collection').append(items);
     showCollectionView();
+    loaded();
 }
 
 /**
@@ -114,7 +122,7 @@ function showCollection(id, callback) {
             var url = value.artUrl;
             var artist = value.artist || '&nbsp;';
             if(!url || url.length === 0) {
-            url = 'img/cover.png';
+                url = 'img/cover.png';
             }
             var html='<a href="#" onClick=""><div class=" hover">';
             html+='<div id="collection-mid" data-mid="' + id + '"><img id="album-cover" with="150" height="150" alt="' + value.artist + '" src="' + url + '" /></div>';
@@ -163,12 +171,14 @@ function showCollection(id, callback) {
 
             if(getActiveTrackId() > 0) {
                 var activeTrack = getActiveTrackId();
-                if(paused) {
-                    $('#column-track-' + activeTrack).html('<span class="paused-icon"/>');
-                }
-                else {
-                    $('#column-track-' + activeTrack).html('<span class="playing-icon"/>');
-                }
+                paused(function(paused) {
+                    if(paused) {
+                        $('#column-track-' + activeTrack).html('<span class="paused-icon"/>');
+                    }
+                    else {
+                        $('#column-track-' + activeTrack).html('<span class="playing-icon"/>');
+                    }
+                });
 
             }
 
@@ -203,10 +213,18 @@ function setToolbarLink(call) {
  * The on-click mouse handler for a row
  */
 function playTrack(id) {
+    var currentTrackId = getActiveTrackId();
     selectTrack(id);
     var collectionId = getCollectionId();
     setActiveCollectionId(collectionId);
-    playSong(id);
+    paused(function(paused) {
+        if(paused || id != currentTrackId) {
+            playSong(id);
+        }
+        else {
+            pause();
+        }
+    });
 }
 
 function selectTrack(id) {
@@ -265,4 +283,12 @@ function hidePlaylistView() {
 
 function showPlaylistView() {
     $('#playlist').fadeIn();
+}
+
+function showStreamsView() {
+    $('#streams').fadeIn();
+}
+
+function hideStreamsView() {
+    $('#streams').fadeOut();
 }

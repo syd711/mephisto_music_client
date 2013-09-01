@@ -41,6 +41,11 @@ public interface IMusicPlayer {
   public boolean pause();
 
   /**
+   * Returns true if the player is paused.
+   */
+  public boolean paused();
+
+  /**
    * Playback of the next song of the active playlist
     */
   public Playlist next();
@@ -63,6 +68,12 @@ public interface IMusicPlayer {
    * @return
    */
   public Playlist getActivePlaylist();
+
+  /**
+   * Returns the active stream.
+   * @return
+   */
+  public Stream getActiveStream();
 
   /**
    * Returns true if the music play implementation

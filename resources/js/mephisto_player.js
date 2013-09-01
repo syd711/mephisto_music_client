@@ -3,7 +3,7 @@
  */
 activeTrackId = -1;
 activeCollectionId = -1;
-paused = false;
+playerPaused = false;
 
 /**
  * Player functions
@@ -31,10 +31,12 @@ paused = false;
             else {
                 setActiveCollectionId(playlist.mid);
                 showCollection(playlist.mid, function() {
-                    refreshUI(playlist, false);
+                    paused(function(paused) {
+                        refreshUI(playlist, false);
+                        setPaused(paused);
+                    });
                 });
             }
-
         }
         else {
             applyInitialView();
@@ -57,7 +59,6 @@ function loadActivePlaylist(callback) {
 function stopPlayer() {
     activeTrackId = -1;
     activeCollectionId = -1;
-    paused = false;
     refreshUI(null, false);
 }
 
@@ -65,12 +66,14 @@ function stopPlayer() {
  * The toolbar play action
  */
 function playPressed() {
-    if(paused) {
-        playSong(getActiveTrackId());
-    }
-    else {
-        playCollection();
-    }
+    paused(function(paused) {
+        if(paused) {
+           playSong(getActiveTrackId());
+        }
+        else {
+           playCollection();
+        }
+    });
 }
 
 
@@ -84,18 +87,20 @@ function playCollection() {
     }).error(showErrorState);
 }
 
+/**
+ * Plays the song for the given mid.
+ */
 function playSong(id) {
-    var triggerProgress = !paused;
-    setPaused(false);
     var collectionId = getActiveCollectionId();
     $.getJSON('/rest/player/playsong/' + collectionId + '/' + id, function(data) {
-        refreshUI(data, triggerProgress);
+        setPaused(false);
+        refreshUI(data, true);
     }).error(showErrorState);
 }
 
 function pause() {
-    setPaused(true);
     $.getJSON('/rest/player/pause', function(data) {
+        setPaused(true);
         if(data) {
             $('#play-icon').attr('src','img/pplay.png');
             $('#play-action').attr('onclick', 'playPressed()');
@@ -103,8 +108,16 @@ function pause() {
     }).error(showErrorState);
 }
 
+/**
+ * Checks if the player is currently paused.
+ */
+function paused(callback) {
+    $.getJSON('/rest/player/paused', function(data) {
+       callback(data);
+    }).error(showErrorState);
+}
+
 function playPrevious() {
-    setPaused(false);
     $.getJSON('/rest/player/previous', function(data) {
         if(data.activeSong) {
             selectTrack(data.activeSong.mid);
@@ -114,7 +127,6 @@ function playPrevious() {
 }
 
 function playNext() {
-    setPaused(false);
     $.getJSON('/rest/player/next', function(data) {
         if(data.activeSong) {
             selectTrack(data.activeSong.mid);
@@ -143,8 +155,8 @@ function getActiveCollectionId() {
 }
 
 function setPaused(p) {
-    paused = p;
-    if(paused) {
+    playerPaused = p;
+    if(p) {
         $('#column-track-' + getActiveTrackId()).html('<span class="paused-icon"/>');
     }
 //    else {
@@ -153,27 +165,6 @@ function setPaused(p) {
 
 }
 
-/**
- * Trigger the progressbar with the total millis of the active song.
- */
-function triggerProgressBar(millis) {
-    window.clearInterval(intervalId);
-    $('#progressbar').show();
-    var percentTotal = 0;
-    var millisInterval = (millis/100)
-    intervalId = window.setInterval(function() {
-       if(!paused) {
-        percentTotal+=1;
-       }
-       $('#progress').attr('style', 'width:' + percentTotal + '%;');
-       var hidden = false; //$('#progress').is(":hidden");
-       if(percentTotal >= 100 || hidden) {
-            $('#progress').attr('style', 'width:0%;');
-            window.clearInterval(intervalId);
-            playNext();
-       }
-   }, millisInterval);
-}
 
 /**
  * Updates the play toolbar
@@ -197,17 +188,48 @@ function refreshUI(data, triggerProgress) {
         var src = data.artUrl;
         $('#player-cover').show();
         $('#player-cover').attr('src', src);
+        $('#player-cover-link').attr('onclick', 'showCollection(' + data.mid + ')');
         $('#player-title-label').html(data.activeSong.name);
         $('#player-album-label').html('<a href="#" class="album-data" style="font-size:20px;font-weight:bold;" onclick="artistAlbums(\'' + data.mid + '\')">' + data.artist + '</a>' + ' - ' + data.name);
 
         if(triggerProgress) {
             $('#progress').attr('style', 'width:0%;');
-            triggerProgressBar(data.activeSong.durationMillis);
+            triggerProgressBar(data.activeSong.durationMillis, data.activeSong.mid);
         }
     }
     else {
       resetPlayer();
     }
+}
+
+
+/**
+ * Trigger the progressbar with the total millis of the active song.
+ */
+function triggerProgressBar(millis, triggerId) {
+    var currentTriggerId = $('#progressbar').attr('data-triggerId');
+    if(currentTriggerId == triggerId) {
+        return;
+    }
+    $('#progressbar').attr('data-triggerId', triggerId);
+    window.clearInterval(intervalId);
+    $('#progressbar').show();
+    var percentTotal = 0;
+    var millisInterval = (millis/100)
+    intervalId = window.setInterval(function() {
+       if(!playerPaused) {
+        percentTotal+=1;
+       }
+       $('#progress').attr('style', 'width:' + percentTotal + '%;');
+       var hidden = false; //$('#progress').is(":hidden");
+       if(percentTotal >= 100 || hidden) {
+            $('#progress').attr('style', 'width:0%;');
+            window.clearInterval(intervalId);
+            if(!isStreamMode()) {
+                playNext();
+            }
+       }
+   }, millisInterval);
 }
 
 /**

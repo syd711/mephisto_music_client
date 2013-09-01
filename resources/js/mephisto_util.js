@@ -5,7 +5,7 @@ function loading(msg) {
     $.mobile.loading( 'show', {
 		text: msg,
 		textVisible: true,
-		theme: 'a',
+		theme: 'c',
 		html: ""
 	});
 }
@@ -25,8 +25,6 @@ function getCollectionId() {
 
 
 function hideErrorState() {
-    $('#footer-bar').show();
-    $('#search-bar').show();
     $('#errorState').hide();
 }
 
@@ -48,6 +46,7 @@ function enableControls(enable) {
     else {
         hidePlaylistView();
         hideCollectionView();
+        hideStreamsView();
         $('#footer-bar').hide();
         resetPlayer();
         $('#search-bar').hide();

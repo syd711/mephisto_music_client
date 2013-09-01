@@ -7,6 +7,8 @@ public class Stream extends MModel {
   private String url;
   private String name;
   private String title;
+  private boolean playable = true;
+  private boolean infoAvailable = true;
 
   public Stream(int mid) {
     super.setMID(mid);
@@ -34,5 +36,21 @@ public class Stream extends MModel {
 
   public void setTitle(String title) {
     this.title = title;
+  }
+
+  public boolean isPlayable() {
+    return playable;
+  }
+
+  public void setPlayable(boolean playable) {
+    this.playable = playable;
+  }
+
+  public boolean isInfoAvailable() {
+    return infoAvailable;
+  }
+
+  public void setInfoAvailable(boolean infoAvailable) {
+    this.infoAvailable = infoAvailable;
   }
 }

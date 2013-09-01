@@ -2,6 +2,7 @@
  * Global Settings
  */
 $.mobile.page.prototype.options.domCache = false;
+$.ajaxSetup({ cache: false });
 STREAM_MODE = "1";
 MUSIC_MODE = "0";
 playbackMode = MUSIC_MODE;
@@ -37,8 +38,10 @@ function initSettings() {
 
         var state = localStorage.getItem("mephisto-play-mode");
         if(state === STREAM_MODE) {
-            $('#playback-music').removeAttr("checked");
-            $('#playback-streams').attr("checked","checked");
+            $("#playback-streams").attr("checked",true).checkboxradio("refresh");
+        }
+        else {
+            $("#playback-music").attr("checked",true).checkboxradio("refresh");
         }
      }).error(showErrorState);
 }
@@ -60,14 +63,27 @@ function switchToState(state) {
     stopPlayer();
 
     if(state == MUSIC_MODE) {
+        loading('Switching to Music Mode...');
+        $('#music-settings-section').show();
         enableControls(true);
         albums();
     }
     else if(state == STREAM_MODE) {
+        loading('Switching to Stream Mode...');
+        $('#music-settings-section').hide();
         enableControls(false);
         streams();
     }
     localStorage.setItem("mephisto-play-mode", state);
+
+    initSettings();
+}
+
+/**
+ * Returns true if the modus is stream.
+ */
+function isStreamMode() {
+    return playbackMode == STREAM_MODE;
 }
 
 /**

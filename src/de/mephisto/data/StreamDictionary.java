@@ -54,6 +54,7 @@ public class StreamDictionary {
         streams.put(midCounter, stream);
         midCounter++;
       }
+      refreshId3();
       LOG.info("Created stream dictionary with " + streams.size() + " stations.");
     } catch (ConfigurationException e) {
       LOG.error("Failed to load stream configuration: " + e.getMessage(), e);
@@ -63,7 +64,7 @@ public class StreamDictionary {
   /**
    * Reloads the id3 tag information of all streams.
    */
-  public void refreshId3() {
+  private void refreshId3() {
     Iterator<Stream> iterator = streams.values().iterator();
     while (iterator.hasNext()) {
       Stream stream = iterator.next();
@@ -108,29 +109,16 @@ public class StreamDictionary {
   }
 
   /**
-   * Updates the given stream with the given URL.
-   *
-   * @param stream
-   * @param url
-   * @return
-   */
-  public Stream updateStream(Stream stream, String url) {
-    stream.setUrl(url);
-    doSave();
-    StreamHelper.loadInfo(stream);
-    return stream;
-  }
-
-  /**
    * Creates and store a new Stream instance
    *
    * @param url
    * @return
    */
-  public Stream storeStream(String url) {
+  public Stream addStream(String url) {
     Stream stream = new Stream(midCounter);
     stream.setName(url);
     stream.setUrl(url);
+    streams.put(stream.getMID(), stream);
 
     midCounter++;
     doSave();

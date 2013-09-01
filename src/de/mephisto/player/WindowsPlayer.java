@@ -27,6 +27,11 @@ public class WindowsPlayer extends AbstractMusicPlayer {
   }
 
   @Override
+  public boolean paused() {
+    return false;  //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
   public Stream play(Stream stream) {
     return stream;
   }

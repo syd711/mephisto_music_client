@@ -4,7 +4,9 @@ import de.mephisto.Mephisto;
 import de.mephisto.data.MusicDictionary;
 import de.mephisto.data.StreamDictionary;
 import de.mephisto.model.Playlist;
+import de.mephisto.model.Stream;
 import de.mephisto.player.MpdPlayer;
+import de.mephisto.util.StreamHelper;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -24,5 +26,12 @@ public class StreamsTest {
   public void testPlayback() throws InterruptedException {
     StreamDictionary.getInstance().init();
     assertTrue(!StreamDictionary.getInstance().getStreams().isEmpty());
+  }
+
+  @Test
+  public void testStreamInfo() {
+    Stream stream = new Stream(0);
+    stream.setUrl("http://sdfsdfsf");
+    StreamHelper.loadInfo(stream);
   }
 }
