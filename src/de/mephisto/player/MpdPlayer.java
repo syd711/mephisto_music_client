@@ -5,6 +5,7 @@ import de.mephisto.model.Song;
 import de.mephisto.model.Stream;
 import de.mephisto.service.IMusicProvider;
 import de.mephisto.util.Config;
+import de.mephisto.util.MPDClient;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.net.telnet.TelnetClient;
 import org.slf4j.Logger;
@@ -26,48 +27,32 @@ public class MpdPlayer extends AbstractMusicPlayer {
   private final static String PROPERTY_HOST = "mpd.host";
   private final static String PROPERTY_PORT = "mpd.port";
 
-  private Configuration config;
-  private TelnetClient client;
-  private InputStream in = null;
-  private byte[] buff = new byte[1024];
-  private int ret_read = 0;
   private Song current;
-  private boolean localModeEnabled;
   private int volume = 99;
+  private MPDClient client;
+  private Configuration config;
+  private MPDStatusListener statusListenerThread;
 
   public MpdPlayer() {
     this.config = Config.getConfiguration(CONFIG_NAME);
-    this.connect();
-  }
+    String host = config.getString(PROPERTY_HOST);
+    int port = config.getInt(PROPERTY_PORT, 6600);
+    client = new MPDClient(host, port);
+    client.connect();
 
-  private void connect() {
-    try {
-      if (in != null) {
-        in.close();
-      }
-      if (client != null) {
-        client.disconnect();
-      }
-      client = new TelnetClient();
-      String host = config.getString(PROPERTY_HOST);
-      localModeEnabled = host.equalsIgnoreCase("localhost");
-      int port = config.getInt(PROPERTY_PORT, 6600);
-      client.connect(host, port);
-      in = client.getInputStream();
+    //listens on the playlist status
+    statusListenerThread = new MPDStatusListener();
+    statusListenerThread.start();
 
-      if(localModeEnabled) {
-        executeLocalCommand("volume " + volume);
-      }
-      LOG.info("Initialized " + this);
-    } catch (Exception e) {
-      LOG.error("Failed to connect to " + this + ": " + e.getMessage());
+    if(client.isLocalModeEnabled()) {
+      client.executeLocalCommand("volume " + volume);
     }
   }
 
   @Override
   public boolean pause() {
     setPaused(true);
-    executeTelnetCommand("pause");
+    client.executeTelnetCommand("pause");
     return true;
   }
 
@@ -96,7 +81,7 @@ public class MpdPlayer extends AbstractMusicPlayer {
       //continue paused song
       if (song == current) {
         LOG.info("MPD Player continues playback of " + song);
-        executeTelnetCommand("play");
+        client.executeTelnetCommand("play");
         return song;
       }
 
@@ -123,110 +108,31 @@ public class MpdPlayer extends AbstractMusicPlayer {
     setPaused(false);
     LOG.info("Playback of URL: " + url);
     try {
-      executeTelnetCommand("stop");
-      executeTelnetCommand("clear");
-      executeTelnetCommand("add " + url);
-      executeTelnetCommand("play");
+      client.executeTelnetCommand("stop");
+      client.executeTelnetCommand("clear");
+      client.executeTelnetCommand("add " + url);
+      client.executeTelnetCommand("play");
     } catch (PlayerException e) {
       LOG.error("Failed to playback " + url + ": " + e.getMessage());
-      connect();
+      client.connect();
       throw e;
     }
   }
 
-  /**
-   * Executes a MPD command via telnet.
-   *
-   * @param cmd
-   */
-  private void executeTelnetCommand(String cmd) {
-    try {
-      LOG.info("Executing telnet command '" + cmd + "'");
-      cmd += "\n";
-      if(client.getOutputStream() == null) {
-        connect();
-      }
-
-      if (client.getOutputStream() != null) {
-        client.getOutputStream().write(cmd.getBytes());
-        client.getOutputStream().flush();
-      }
-      else {
-        throw new PlayerException("Exception executing MPD telnet command: Could not acquire telnet output steam, please check the MPD server connection.");
-      }
-
-      awaitOk();
-    } catch (IOException e) {
-      LOG.error("Exception executing MPD telnet command '" + cmd + "':" + e.getMessage());
-      throw new PlayerException("Exception executing MPD telnet command '"+ cmd + "':" + e.getMessage() + ", please check the MPD server connection.");
-    }
-  }
-
-  /**
-   * Invokes a system command for the mpc client.
-   *
-   * @param cmd
-   */
-  private String executeLocalCommand(String cmd) {
-    try {
-      LOG.info("Executing mpc command '" + cmd + "'");
-      cmd = "mpc " + cmd + "\n";
-      Process p = Runtime.getRuntime().exec(cmd);
-      p.waitFor();
-      BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-      String line = reader.readLine();
-      StringBuilder builder = new StringBuilder();
-      while (line != null) {
-        line = reader.readLine();
-        builder.append(line);
-      }
-
-      return builder.toString();
-    } catch (Exception e) {
-      LOG.error("Exception executing MPD command:" + e.getMessage());
-      throw new PlayerException("Exception executing MPD command:" + e.getMessage());
-    }
-  }
-
-  /**
-   * Waits until an acknowledge flag is logged by the mpc.
-   *
-   * @return
-   */
-  private boolean awaitOk() {
-    try {
-//      do {
-//        ret_read = in.read(buff);
-//        if (ret_read > 0) {
-//          String msg = new String(buff, 0, ret_read).trim();
-//          LOG.info("MPD: " + msg);
-//          if (msg.contains("OK")) {
-//            return true;
-//          }
-//        }
-//      }
-//      while (ret_read >= 0);
-      Thread.sleep(100);
-    } catch (Exception e) {
-      LOG.error("Exception while reading from MPD:" + e.getMessage());
-      throw new PlayerException("Exception while reading from MPD:" + e.getMessage() + ", check MPD server is running");
-    }
-    return false;
-  }
 
 
   @Override
   public boolean setVolume(int volume) {
-    if (localModeEnabled) {
+    if (client.isLocalModeEnabled()) {
       this.volume = volume;
-      executeLocalCommand("volume " + volume);
+      client.executeLocalCommand("volume " + volume);
     }
     return true;
   }
 
   @Override
   public int getVolume() {
-    if (localModeEnabled) {
+    if (client.isLocalModeEnabled()) {
       return this.volume;
     }
     return 0;
@@ -234,12 +140,53 @@ public class MpdPlayer extends AbstractMusicPlayer {
 
   @Override
   public boolean stop() {
-    executeTelnetCommand("stop");
+    client.executeTelnetCommand("stop");
     return true;
   }
 
   @Override
   public boolean isVolumeControlEnabled() {
-    return localModeEnabled;
+    return client.isLocalModeEnabled();
+  }
+
+  /**
+   * Thread that checks the mpd status and updates the playlist
+   * if a song has finished playing.
+   */
+  class MPDStatusListener extends Thread {
+    private Song current;
+    private long millis;
+
+    @Override
+    public void run() {
+      LOG.info("Started MPD player status thread.");
+      while (true) {
+        try {
+          Thread.sleep(100);
+          if(activePlaylist != null) {
+            Song song = activePlaylist.getActiveSong();
+            if(song != null) {
+              if(current == null || song.getMID() != current.getMID()) {
+                LOG.info("Detected new song " + song);
+                current = song;
+                millis = song.getDurationMillis();
+              }
+              if(!isPaused())  {
+                millis-=100; //TODO mpc status query
+                if(millis <= 0)  {
+                  next();
+                  if(activePlaylist.getActiveSong() != null) {
+                    play(activePlaylist.getActiveSong());
+                  }
+                }
+              }
+            }
+          }
+        }
+        catch (Exception e) {
+          LOG.error("Error in status listener thread: " + e.getMessage(), e);
+        }
+      }
+    }
   }
 }

@@ -10,10 +10,24 @@ playerPaused = false;
  ****************************************
  */
  var intervalId;
+
  function initPlayer() {
      $('#progressbar').hide();
      $('#player-cover').hide();
-     loadActivePlaylist(function(playlist) {
+     refreshPlayer();
+     initRefreshTrigger();
+ }
+
+function initRefreshTrigger() {
+    window.setInterval(function() {
+      if(focused && !playerPaused) {
+        refreshPlayer();
+      }
+   }, 2000);
+}
+
+function refreshPlayer() {
+    loadActivePlaylist(function(playlist) {
         if(playlist) {
             if(playlist.errorState) {
                 showErrorState(playlist.errorState, playlist.errorHint);
@@ -21,10 +35,7 @@ playerPaused = false;
             else {
                 setActiveCollectionId(playlist.mid);
                 showCollection(playlist.mid, function() {
-                    paused(function(paused) {
-                        refreshUI(playlist, false);
-                        setPaused(paused);
-                    });
+                    refreshUI(playlist);
                 });
             }
         }
@@ -32,7 +43,16 @@ playerPaused = false;
             applyInitialView();
         }
      });
- }
+}
+
+var focused = true;
+
+window.onfocus = function() {
+    focused = true;
+};
+window.onblur = function() {
+    focused = false;
+};
 
 /**
  * Retrieves the active playlist from the player.
@@ -49,7 +69,7 @@ function loadActivePlaylist(callback) {
 function stopPlayer() {
     activeTrackId = -1;
     activeCollectionId = -1;
-    refreshUI(null, false);
+    refreshUI(null);
 }
 
 /**
@@ -73,7 +93,7 @@ function playPressed() {
 function playCollection() {
     var collectionId = getCollectionId();
     $.getJSON('/rest/player/play/' + collectionId, function(data) {
-        refreshUI(data, true);
+        refreshUI(data);
     }).error(showErrorState);
 }
 
@@ -84,7 +104,7 @@ function playSong(id) {
     var collectionId = getActiveCollectionId();
     $.getJSON('/rest/player/playsong/' + collectionId + '/' + id, function(data) {
         setPaused(false);
-        refreshUI(data, true);
+        refreshUI(data);
     }).error(showErrorState);
 }
 
@@ -123,7 +143,7 @@ function playNext() {
             playSong(data.activeSong.mid);
         }
         else {
-            refreshUI(data, false);
+            refreshUI(data);
         }
     }).error(showErrorState);
 }
@@ -159,7 +179,7 @@ function setPaused(p) {
 /**
  * Updates the play toolbar
  */
-function refreshUI(data, triggerProgress) {
+function refreshUI(data) {
     //check error state first
     if(data && data.errorState) {
         showErrorState(data.errorState, playlist.errorHint);
@@ -181,45 +201,10 @@ function refreshUI(data, triggerProgress) {
         $('#player-cover-link').attr('onclick', 'showCollection(' + data.mid + ')');
         $('#player-title-label').html(data.activeSong.name);
         $('#player-album-label').html('<a href="#" class="album-data" style="font-size:20px;font-weight:bold;" onclick="artistAlbums(\'' + data.mid + '\')">' + data.artist + '</a>' + ' - ' + data.name);
-
-        if(triggerProgress) {
-            $('#progress').attr('style', 'width:0%;');
-            triggerProgressBar(data.activeSong.durationMillis, data.activeSong.mid);
-        }
     }
     else {
       resetPlayer();
     }
-}
-
-
-/**
- * Trigger the progressbar with the total millis of the active song.
- */
-function triggerProgressBar(millis, triggerId) {
-    var currentTriggerId = $('#progressbar').attr('data-triggerId');
-    if(currentTriggerId == triggerId) {
-        return;
-    }
-    $('#progressbar').attr('data-triggerId', triggerId);
-    window.clearInterval(intervalId);
-    $('#progressbar').show();
-    var percentTotal = 0;
-    var millisInterval = (millis/100)
-    intervalId = window.setInterval(function() {
-       if(!playerPaused) {
-        percentTotal+=1;
-       }
-       $('#progress').attr('style', 'width:' + percentTotal + '%;');
-       var hidden = false; //$('#progress').is(":hidden");
-       if(percentTotal >= 100 || hidden) {
-            $('#progress').attr('style', 'width:0%;');
-            window.clearInterval(intervalId);
-            if(!isStreamMode()) {
-                playNext();
-            }
-       }
-   }, millisInterval);
 }
 
 /**

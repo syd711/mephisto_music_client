@@ -118,6 +118,13 @@ function showCollection(id, callback) {
     hideCollectionView();
     showPlaylistView();
     $.getJSON('/rest/collections/album/' + id, function(value) {
+            if(value.activeSong) {
+                setActiveTrackId(value.activeSong.mid);
+            }
+            else {
+                setActiveTrackId(-1);
+            }
+
             var items = [];
             var url = value.artUrl;
             var artist = value.artist || '&nbsp;';
@@ -169,9 +176,11 @@ function showCollection(id, callback) {
             $('#playlist-table-body').empty();
             $('#playlist-table-body').append(items);
 
+
             if(getActiveTrackId() > 0) {
                 var activeTrack = getActiveTrackId();
                 paused(function(paused) {
+                    setPaused(paused);
                     if(paused) {
                         $('#column-track-' + activeTrack).html('<span class="paused-icon"/>');
                     }
