@@ -40,8 +40,8 @@ function logoClicked() {
  * Loads the album to a responsive layout
  */
 function albums() {
-    hidePlaylistView();
     hideCollectionView();
+    hidePlaylistView();
     hideStreamsView();
     setNameAndTitle('Albums', '');
     $.getJSON('/rest/collections/albums', function(data) {
@@ -53,8 +53,8 @@ function albums() {
  * Looks up all albums of the given collection.
  */
 function artistAlbums(collectionId) {
-    hidePlaylistView();
     hideCollectionView();
+    hidePlaylistView();
     setNameAndTitle('Albums', '');
     $.getJSON('/rest/collections/artist/albums/' + collectionId, function(data) {
         if(data.items.length > 0) {
@@ -69,8 +69,8 @@ function artistAlbums(collectionId) {
  * Looks up all albums of the given genre.
  */
 function genre(collectionId) {
-    hidePlaylistView();
     hideCollectionView();
+    hidePlaylistView();
     setNameAndTitle('Genre', '');
     $.getJSON('/rest/collections/genre/albums/' + collectionId, function(data) {
         if(data.items.length > 0) {

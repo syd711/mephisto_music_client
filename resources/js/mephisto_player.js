@@ -14,6 +14,7 @@ playerPaused = false;
  function initPlayer() {
      $('#progressbar').hide();
      $('#player-cover').hide();
+     applyInitialView();
      refreshPlayer();
      initRefreshTrigger();
  }
@@ -21,9 +22,15 @@ playerPaused = false;
 function initRefreshTrigger() {
     window.setInterval(function() {
       if(focused && !playerPaused) {
-        refreshPlayer();
+        var collectionHidden = $('#collection-mid').is(":hidden");
+        if(!collectionHidden) {//only refresh if collection view
+            var mid = $('#collection-mid').attr('data-mid');
+            if(mid == activeCollectionId) { //only refresh if active collection is shown.
+                refreshPlayer();
+            }
+        }
       }
-   }, 2000);
+   }, 3000);
 }
 
 function refreshPlayer() {
@@ -38,9 +45,6 @@ function refreshPlayer() {
                     refreshUI(playlist);
                 });
             }
-        }
-        else {
-            applyInitialView();
         }
      });
 }

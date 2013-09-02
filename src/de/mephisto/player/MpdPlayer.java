@@ -77,6 +77,7 @@ public class MpdPlayer extends AbstractMusicPlayer {
   @Override
   public Song play(Song song) {
     if (song != null) {
+      setPaused(false);
       LOG.info("Playback of: " + song);
       //continue paused song
       if (song == current) {
@@ -105,7 +106,6 @@ public class MpdPlayer extends AbstractMusicPlayer {
    * @throws IOException
    */
   public void playUrl(String url) {
-    setPaused(false);
     LOG.info("Playback of URL: " + url);
     try {
       client.executeTelnetCommand("stop");
