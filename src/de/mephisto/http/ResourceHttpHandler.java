@@ -3,6 +3,7 @@ package de.mephisto.http;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import de.mephisto.Mephisto;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +16,8 @@ public class ResourceHttpHandler implements HttpHandler {
   FileNameMap fileNameMap = URLConnection.getFileNameMap();
 
   public void handle(HttpExchange exchange) throws IOException {
+    Mephisto.getInstance(); //init on first request
+
     String requestMethod = exchange.getRequestMethod();
     String targetPath = exchange.getRequestURI().getPath();
     if (requestMethod.equalsIgnoreCase("GET")) {

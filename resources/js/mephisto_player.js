@@ -11,18 +11,8 @@ playerPaused = false;
  */
  var intervalId;
  function initPlayer() {
-     $('#volume-slider').hide();
      $('#progressbar').hide();
      $('#player-cover').hide();
-     $.getJSON('/rest/player/volumeenabled', function(data) {
-        if(data) {
-            applyVolumeSliderListener();
-        }
-        else {
-            $('#volume-table').hide();
-        }
-     }).error(showErrorState);
-
      loadActivePlaylist(function(playlist) {
         if(playlist) {
             if(playlist.errorState) {

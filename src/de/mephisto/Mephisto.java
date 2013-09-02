@@ -21,6 +21,7 @@ public class Mephisto {
 
   private IMusicPlayer player;
   private ProviderManager providerManager;
+  private boolean initialized = false;
 
   public static Mephisto getInstance() {
     if(instance == null) {
@@ -63,6 +64,8 @@ public class Mephisto {
 
       LOG.info("Loading Streams");
       StreamDictionary.getInstance().init();
+
+      initialized = true;
     }
     catch (Exception e) {
       LOG.info("Error starting Mephisto: " + e.getMessage(), e);
@@ -70,6 +73,13 @@ public class Mephisto {
     }
   }
 
+  /**
+   * Returns true if the player and dictionaries have been loaded.
+   * @return
+   */
+  public boolean isInitialized() {
+    return initialized;
+  }
 
   /**
    * And in the beginning, there was main...
@@ -77,10 +87,7 @@ public class Mephisto {
    * @param args
    */
   public static void main(String[] args) throws IOException {
-    Mephisto.getInstance();
-
     LOG.info("Starting http server on: " + Server.resolveHttpUrl());
     Server.start();
   }
-
 }
