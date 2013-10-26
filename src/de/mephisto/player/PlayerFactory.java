@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 public class PlayerFactory {
   private final static Logger LOG = LoggerFactory.getLogger(PlayerFactory.class);
 
-  private final static String PLAYER_CONFIG = "player.properties";
+  public final static String PLAYER_CONFIG = "player.properties";
 
   public static IMusicPlayer createPlayer() {
     try {

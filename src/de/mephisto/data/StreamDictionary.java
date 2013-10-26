@@ -1,6 +1,8 @@
 package de.mephisto.data;
 
 import de.mephisto.model.Stream;
+import de.mephisto.player.PlayerFactory;
+import de.mephisto.util.Config;
 import de.mephisto.util.StreamHelper;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -19,7 +21,7 @@ import java.util.Map;
  */
 public class StreamDictionary {
   private final static Logger LOG = LoggerFactory.getLogger(StreamDictionary.class);
-  private final static String CONFIG_FILE = "conf/streams.properties";
+  private final static String CONFIG_FILE = Config.getConfiguration(PlayerFactory.PLAYER_CONFIG).getString("streams.properties");
 
   private static StreamDictionary instance = new StreamDictionary();
 
@@ -45,14 +47,16 @@ public class StreamDictionary {
       Iterator<String> keys = streamConfig.getKeys();
       while (keys.hasNext()) {
         String key = keys.next();
-        String url = streamConfig.getString(key);
+        if(key.contains(".url")) {
+          String url = streamConfig.getString(key);
 
-        Stream stream = new Stream(midCounter);
-        stream.setName(url);
-        stream.setUrl(url);
+          Stream stream = new Stream(midCounter);
+          stream.setName(url);
+          stream.setUrl(url);
 
-        streams.put(midCounter, stream);
-        midCounter++;
+          streams.put(midCounter, stream);
+          midCounter++;
+        }
       }
       refreshId3();
       LOG.info("Created stream dictionary with " + streams.size() + " stations.");
@@ -134,7 +138,8 @@ public class StreamDictionary {
     Iterator<Stream> iterator = streams.values().iterator();
     while (iterator.hasNext()) {
       Stream stream = iterator.next();
-      streamConfig.addProperty(String.valueOf(stream.getMID()), stream.getUrl());
+      streamConfig.addProperty(stream.getMID() + ".url", stream.getUrl());
+      streamConfig.addProperty(stream.getMID() + ".name", stream.getName());
     }
     try {
       streamConfig.save(new File(CONFIG_FILE));

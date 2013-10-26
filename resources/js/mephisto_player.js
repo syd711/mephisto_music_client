@@ -71,8 +71,6 @@ function loadActivePlaylist(callback) {
  * Invoked for setting changes.
  */
 function stopPlayer() {
-    activeTrackId = -1;
-    activeCollectionId = -1;
     refreshUI(null);
 }
 

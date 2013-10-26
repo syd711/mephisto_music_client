@@ -7,14 +7,10 @@ import de.mephisto.service.IMusicProvider;
 import de.mephisto.util.Config;
 import de.mephisto.util.MPDClient;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.net.telnet.TelnetClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 /**
  * MPD implementation for the playback of mp3, etc.

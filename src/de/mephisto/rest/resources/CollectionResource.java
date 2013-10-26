@@ -1,7 +1,9 @@
 package de.mephisto.rest.resources;
 
+import de.mephisto.Mephisto;
 import de.mephisto.data.MusicDictionary;
 import de.mephisto.model.Album;
+import de.mephisto.model.Playlist;
 import de.mephisto.model.PlaylistCollection;
 import de.mephisto.rest.JSONViews;
 import org.codehaus.jackson.map.annotate.JsonView;
@@ -48,7 +50,12 @@ public class CollectionResource {
   @Path("album/{id}")
   @JsonView({JSONViews.AlbumView.class})
   public Album getAlbum(@PathParam("id") int id) {
-    return MusicDictionary.getInstance().getAlbum(id);
+    Album album =  MusicDictionary.getInstance().getAlbum(id);
+    final Playlist activePlaylist = Mephisto.getInstance().getPlayer().getActivePlaylist();
+    if(activePlaylist != null && album.getMID() != activePlaylist.getMID()) {
+      album.setActiveSong(null);
+    }
+    return album;
   }
 
   @GET
