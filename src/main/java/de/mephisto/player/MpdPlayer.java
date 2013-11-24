@@ -59,6 +59,9 @@ public class MpdPlayer extends AbstractMusicPlayer {
 
   @Override
   public Stream play(Stream stream) {
+    if(activePlaylist != null) {
+      activePlaylist.setActiveSong(null);
+    }
     activePlaylist = null;
     activeStream = stream;
     playUrl(stream.getUrl());
@@ -106,7 +109,13 @@ public class MpdPlayer extends AbstractMusicPlayer {
     try {
       client.executeTelnetCommand("stop");
       client.executeTelnetCommand("clear");
-      client.executeTelnetCommand("add " + url);
+      if(url.endsWith(".pls")) {
+        client.executeTelnetCommand("load " + url);
+      }
+      else {
+        client.executeTelnetCommand("add " + url);
+      }
+
       client.executeTelnetCommand("play");
     } catch (PlayerException e) {
       LOG.error("Failed to playback " + url + ": " + e.getMessage());
