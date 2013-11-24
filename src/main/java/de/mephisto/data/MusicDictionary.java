@@ -80,7 +80,6 @@ public class MusicDictionary {
     songs.put(song.getId(), song);
     addToAlbum(song);
     addToGenre(song);
-    LOG.debug("Add song " + song);
   }
 
   /**
